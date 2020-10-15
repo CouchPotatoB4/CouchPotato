@@ -31,6 +31,7 @@
 
 ### 1.1 Purpose
 
+This Software Requirements Specification (SRS) describes all specifications for the application "CouchPotato". It includes an overview about this project and its vision, detailed information about the planned features and boundary conditions of the development process.
 
 ### 1.2 Scope
 * bullet point one:  
@@ -61,6 +62,8 @@ TODO
 ## 2. Overall Description
 
 ### 2.1 Vision
+
+The application is is meant to help a group of people choose movies or series to watch together from an Streaming service
 
 ### 2.2 Use Case Diagram
 TODO: own use case Diagram
