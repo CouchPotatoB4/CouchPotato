@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CouchPotato
+namespace CouchPotato.LobbyUtil
 {
-    class Program
+    enum Mode
     {
-        static void Main(string[] args)
-        {
-            //HI
-
-        }
+        JOIN, GENRE_SELECTION, FILM_SELECTION
     }
 }

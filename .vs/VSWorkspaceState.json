@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\cs",
+    "\\cs\\CouchPotato"
   ],
-  "SelectedNode": "\\cs",
   "PreviewInSolutionExplorer": false
 }
