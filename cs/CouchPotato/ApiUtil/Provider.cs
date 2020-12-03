@@ -8,6 +8,8 @@ using CouchPotato.ApiUtil;
 
 namespace CouchPotato.ApiUtil
 {
+    using AniflixApi = CouchPotato.ApiUtil.Aniflix.AniflixApi;
+
     enum Provider
     {
         Netflix, AmazonPrime, Aniflix
@@ -16,9 +18,9 @@ namespace CouchPotato.ApiUtil
     static class ProviderMethods
     {
         //TODO
-        private static IApi NETFLIX = new Api();
-        private static IApi AMAZON_PRIME = new Api();
-        private static IApi ANIFLIX = new Api();
+        private static IApi NETFLIX;
+        private static IApi AMAZON_PRIME;
+        private static IApi ANIFLIX = new AniflixApi();
 
         public static IApi getApi(this Provider provider)
         {

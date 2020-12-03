@@ -7,18 +7,20 @@ using System.Drawing;
 
 namespace CouchPotato.ApiUtil
 {
-    using Film = CouchPotato.FilmUtil.Film;
+    using Show = CouchPotato.ShowUtil.Show;
 
     interface IApi
     {
-        Film[] getFilms();
+        Show[] getShows();
 
-        Film[] getFilms(string genre);
+        Show[] getShows(string genre);
 
-        Film[] getFilms(int page);
+        Show[] getShows(IList<string> genres);
+
+        Show[] getShows(int page);
 
         string[] getGenres();
 
-        Image getCoverForFilm(long id);
+        Image getCoverForShow(long id);
     }
 }

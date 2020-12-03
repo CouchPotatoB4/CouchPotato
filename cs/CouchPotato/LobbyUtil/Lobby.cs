@@ -8,9 +8,9 @@ using CouchPotato.ApiUtil;
 
 namespace CouchPotato.LobbyUtil
 {
-    using User = CouchPotato.UserUtil.User;
-    using Provider = CouchPotato.ApiUtil.Provider;
-    using Film = CouchPotato.FilmUtil.Film;
+    using User = UserUtil.User;
+    using Provider = ApiUtil.Provider;
+    using Show = ShowUtil.Show;
 
     class Lobby
     {
@@ -18,7 +18,7 @@ namespace CouchPotato.LobbyUtil
         private ISet<User> users = new HashSet<User>();
         private User host;
         private Provider provider;
-        private ISet<Film> films = new HashSet<Film>();
+        private ISet<Show> shows = new HashSet<Show>();
         private bool[,] votes;
         private string genre;
         private Mode mode;
@@ -49,9 +49,9 @@ namespace CouchPotato.LobbyUtil
        
         public Image getCoverForFilm(long id)
         {
-            foreach (Film film in films)
+            foreach (Show show in shows)
             {
-                if (film.ID == id) return provider.getApi().getCoverForFilm(id);
+                if (show.Id == id) return provider.getApi().getCoverForShow(id);
             }
             return null;
         }
@@ -70,7 +70,7 @@ namespace CouchPotato.LobbyUtil
             int height = 0;
 
             if (mode == Mode.FILM_SELECTION) height = provider.getApi().getGenres().Length;
-            else height = provider.getApi().getFilms(genre).Length;
+            else height = provider.getApi().getShows(genre).Length;
 
             votes = new bool[width, height];
         }
@@ -85,9 +85,9 @@ namespace CouchPotato.LobbyUtil
             return provider.getApi().getGenres();
         }
 
-        public ISet<Film> Films
+        public ISet<Show> Shows
         {
-            get { return films; }
+            get { return shows; }
         }
 
 
@@ -115,20 +115,20 @@ namespace CouchPotato.LobbyUtil
             if (mode == Mode.FILM_SELECTION)
             {
                 int row = 0;
-                if (films.Count == 0)
+                if (shows.Count == 0)
                 {
-                    foreach (Film f in provider.getApi().getFilms(genre))
+                    foreach (Show s in provider.getApi().getShows(genre))
                     {
-                        if (f.ID == filmId) break;
+                        if (s.Id == filmId) break;
 
                         row++;
                     }
                 }
                 else
                 {
-                    foreach (Film f in films)
+                    foreach (Show s in shows)
                     {
-                        if (f.ID == filmId) break;
+                        if (s.Id == filmId) break;
 
                         row++;
                     }

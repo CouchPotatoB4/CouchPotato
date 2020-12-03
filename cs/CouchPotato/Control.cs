@@ -10,7 +10,7 @@ namespace CouchPotato
 {
     using Lobby = LobbyUtil.Lobby;
     using User = UserUtil.User;
-    using Film = FilmUtil.Film;
+    using Show = ShowUtil.Show;
     using Provider = ApiUtil.Provider;
 
     class Control
@@ -20,7 +20,6 @@ namespace CouchPotato
         public string post(string request)
         {
             //TODO
-
 
             return null;
         }
@@ -54,9 +53,9 @@ namespace CouchPotato
             lobby.swipeGenre(userId, genre);
         }
 
-        private ISet<Film> getFilms(Lobby lobby)
+        private ISet<Show> getFilms(Lobby lobby)
         {
-            return lobby.Films;
+            return lobby.Shows;
         }
 
         private void swipeFilm(Lobby lobby, long userId, long filmId)

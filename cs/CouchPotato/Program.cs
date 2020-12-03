@@ -11,7 +11,8 @@ namespace CouchPotato
         static void Main(string[] args)
         {
             //HI
-
+            TestFrontend t = new TestFrontend();
+            t.ShowDialog();
         }
     }
 }

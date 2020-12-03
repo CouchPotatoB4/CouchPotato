@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CouchPotato.FilmUtil
+namespace CouchPotato.ShowUtil
 {
-    class Film
+    class Show
     {
-        private long id;
-        private string name;
-        private string description;
+        private int id;
 
-        public long ID
+        public int Id
         {
             get { return id; }
             set { id = value; }
         }
+
+        private string name;
 
         public string Name
         {
@@ -24,11 +24,19 @@ namespace CouchPotato.FilmUtil
             set { name = value; }
         }
 
+        private string description;
+
         public string Description
         {
             get { return description; }
             set { description = value; }
         }
 
+        public Show(int id, string name, string description)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+        }
     }
 }
