@@ -1,0 +1,14 @@
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\CouchPotato.exe.config
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\CouchPotato.exe
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\CouchPotato.pdb
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.csprojAssemblyReference.cache
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.TestFrontend.resources
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.csproj.GenerateResource.cache
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.csproj.CoreCompileInputs.cache
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.exe
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.pdb
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\Newtonsoft.Json.dll
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\Newtonsoft.Json.xml
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.csproj.CopyComplete
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.Properties.Resources.resources
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.FormVoting.resources
