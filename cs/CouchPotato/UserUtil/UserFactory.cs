@@ -15,7 +15,7 @@ namespace CouchPotato.UserUtil
             long id = createId();
             usedId.Add(id);
 
-            return new User(id, name, 3);
+            return new User(id, name);
         }
 
         private static long createId()

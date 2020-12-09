@@ -21,6 +21,6 @@ namespace CouchPotato.ApiUtil
 
         string[] getGenres();
 
-        Image getCoverForShow(long id);
+        Image getCoverForShow(int id);
     }
 }

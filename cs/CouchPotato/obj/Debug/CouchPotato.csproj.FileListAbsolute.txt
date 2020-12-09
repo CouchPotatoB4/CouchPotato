@@ -10,3 +10,5 @@ D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.pd
 D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\Newtonsoft.Json.dll
 D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\bin\Debug\Newtonsoft.Json.xml
 D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.csproj.CopyComplete
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.Properties.Resources.resources
+D:\Dokumente\git\CouchPotato\CouchPotato\cs\CouchPotato\obj\Debug\CouchPotato.FormVoting.resources

@@ -10,9 +10,21 @@ namespace CouchPotato
     {
         static void Main(string[] args)
         {
-            //HI
-            TestFrontend t = new TestFrontend();
-            t.ShowDialog();
+            new Program();
+        }
+
+
+        public Program()
+        {
+            UseCaseMovieVotingAndSwiping();
+        }
+
+
+        private void UseCaseMovieVotingAndSwiping()
+        {
+            Console.WriteLine("UseCase Movie Voting and Swiping.");
+            FormVoting fV = new FormVoting();
+            fV.ShowDialog();
         }
     }
 }

@@ -20,8 +20,9 @@ namespace CouchPotato.LobbyUtil
         private Provider provider;
         private ISet<Show> shows = new HashSet<Show>();
         private bool[,] votes;
-        private string genre;
+        private string[] genres;
         private Mode mode;
+        private int swipes, genresSwipes;
 
         public Lobby(User host, long id)
         {
@@ -34,20 +35,30 @@ namespace CouchPotato.LobbyUtil
             users.Add(user);
         }
 
-        public void setConfiguration(Provider? provider, int swipes)
+        public User getUser(long id)
+        {
+            foreach (User u in users)
+            {
+                if (u.ID == id) return u;
+            }
+            if (host.ID == id) return host;
+            return null;
+        }
+
+        public void setConfiguration(Provider? provider, int swipes, int genresCount)
         {
             if (provider != null) this.provider = (Provider)provider;
-            if (swipes > 0)
+
+            if (swipes > 0) this.swipes = swipes;
+
+            if (genresCount > 0)
             {
-                foreach (User user in users)
-                {
-                    user.resetSwipes(swipes);
-                }
-                host.resetSwipes(swipes);
+                genres = new string[genresCount];
+                this.genresSwipes = genresCount;
             }
         }
        
-        public Image getCoverForFilm(long id)
+        public Image getCoverForShow(int id)
         {
             foreach (Show show in shows)
             {
@@ -58,21 +69,41 @@ namespace CouchPotato.LobbyUtil
 
         public void nextMode()
         {
-            if (mode == Mode.JOIN) mode = Mode.GENRE_SELECTION;
-            else if (mode == Mode.GENRE_SELECTION) mode = Mode.FILM_SELECTION;
-
+            if (mode == Mode.JOIN)
+            {
+                mode = Mode.GENRE_SELECTION;
+                provider.getApi().getGenres();
+                setUserSwipes(genresSwipes);
+            }
+            else if (mode == Mode.GENRE_SELECTION)
+            {
+                genres = getGenreResult();
+                provider.getApi().getShows(genres);
+                mode = Mode.FILM_SELECTION;
+                setUserSwipes(swipes);
+            }
+                
             createVoteArray();
         }
 
         private void createVoteArray()
         {
-            int width = users.Count;
+            int width = users.Count + 1;
             int height = 0;
 
-            if (mode == Mode.FILM_SELECTION) height = provider.getApi().getGenres().Length;
-            else height = provider.getApi().getShows(genre).Length;
+            if (mode == Mode.FILM_SELECTION) height = shows.Count; 
+            else height = provider.getApi().getGenres().Length;
 
             votes = new bool[width, height];
+        }
+
+        private void setUserSwipes(int swipes)
+        {
+            foreach (User u in users)
+            {
+                u.Swipes = swipes;
+            }
+            host.Swipes = swipes;
         }
 
         public bool isOpen()
@@ -80,9 +111,9 @@ namespace CouchPotato.LobbyUtil
             return mode == Mode.JOIN;
         }
 
-        public string[] getGenre()
+        public string[] Genre
         {
-            return provider.getApi().getGenres();
+            get { return provider.getApi().getGenres(); }
         }
 
         public ISet<Show> Shows
@@ -90,53 +121,96 @@ namespace CouchPotato.LobbyUtil
             get { return shows; }
         }
 
-
-        public void swipeGenre(long userId, string genre)
+        public void loadPage(int page)
         {
-            if (mode == Mode.GENRE_SELECTION)
+            if (mode == Mode.FILM_SELECTION)
             {
-                int row = 0;
-                foreach(string g in provider.getApi().getGenres())
+                foreach (Show s in provider.getApi().getShows(page))
                 {
-                    if (g.Equals(genre)) break;
-
-                    row++;
+                    shows.Add(s);
                 }
-
-                int column = getUserNumberInSet(userId);
-
-                votes[column, row] = true;
             }
         }
 
 
-        public void swipeFilm(long userId, long filmId)
+        public Show getNextShow(int number)
         {
+            if (number >= shows.Count)
+            {
+                int page = number / ApiConstants.PAGE_SIZE;
+                loadPage(page);
+            }
+            return shows.ElementAt(number);
+        }
+
+
+        public void swipeGenre(long userId, string genre)
+        {          
+            if (mode == Mode.GENRE_SELECTION)
+            {
+                if (getUser(userId).swipe())
+                {
+                    int row = 0;
+                    foreach (string g in provider.getApi().getGenres())
+                    {
+                        if (g.Equals(genre)) break;
+
+                        row++;
+                    }
+
+                    int column = getUserNumberInSet(userId);
+
+                    votes[column, row] = true;
+                }
+            }
+        }
+
+
+        public void swipeFilm(long userId, int showId)
+        {
+            //if (mode == Mode.FILM_SELECTION)
+            //{
+            //    if (getUser(userId).swipe())
+            //    {
+            //        int row = 0;
+            //        if (shows.Count == 0)
+            //        {
+            //            foreach (Show s in provider.getApi().getShows(genres))
+            //            {
+            //                if (s.Id == showId) break;
+
+            //                row++;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            foreach (Show s in shows)
+            //            {
+            //                if (s.Id == showId) break;
+
+            //                row++;
+            //            }
+            //        }
+
+            //        int column = getUserNumberInSet(userId);
+
+            //        votes[column, row] = true;
+            //    }               
+            //}
+
             if (mode == Mode.FILM_SELECTION)
             {
-                int row = 0;
-                if (shows.Count == 0)
+                foreach (Show s in shows)
                 {
-                    foreach (Show s in provider.getApi().getShows(genre))
+                    if (s.Id == showId)
                     {
-                        if (s.Id == filmId) break;
-
-                        row++;
+                        if (getUser(userId).swipe())
+                        {
+                            s.vote();
+                            break;
+                        }
                     }
                 }
-                else
-                {
-                    foreach (Show s in shows)
-                    {
-                        if (s.Id == filmId) break;
-
-                        row++;
-                    }
-                }
-
-                int column = getUserNumberInSet(userId);
-
-                votes[column, row] = true;
             }
         }
 
@@ -152,10 +226,57 @@ namespace CouchPotato.LobbyUtil
             return column;
         }
 
-        private string getResult()
+        private string[] getGenreResult()
         {
-            //TODO
-            return null;
+            IDictionary<int, int> dicitonary = new Dictionary<int, int>();
+
+            string[] allGenres = provider.getApi().getGenres();
+
+            for (int r = 0; r < allGenres.Length; r++)
+            {
+                int count = 0;
+
+                for (int c = 0; c < users.Count + 1; c++)
+                {
+                    if (votes[c, r]) count++;       
+                }
+
+                dicitonary.Add(r, count);
+            }
+
+            KeyValuePair<int, int>[] sortedDictionary = sortDicitonary(dicitonary);
+
+            string[] result = new string[genres.Length];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                int j = sortedDictionary[i].Key;
+                result[i] = allGenres[j];
+            } 
+
+            return result;
+        }
+
+        private KeyValuePair<int, int>[] sortDicitonary(IDictionary<int, int> dictionary)
+        {
+            KeyValuePair<int, int>[] sorted = dictionary.AsEnumerable().ToArray();
+
+            int offset = 1;
+            for (int j = 0; j < sorted.Length - 1; j++)
+            {
+                for (int i = offset; i < sorted.Length - 1; i++)
+                {
+                    if (sorted[i].Value > sorted[i - 1].Value)
+                    {
+                        var btw = sorted[i - 1];
+                        sorted[i - 1] = sorted[i];
+                        sorted[i] = btw;
+                    }
+                }
+                offset++;
+            }
+
+            return sorted;
         }
     }
 }

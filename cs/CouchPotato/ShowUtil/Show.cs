@@ -9,6 +9,11 @@ namespace CouchPotato.ShowUtil
     class Show
     {
         private int id;
+        private string name;
+        private string description;
+        private string coverStorage;
+        private int votes;
+
 
         public int Id
         {
@@ -16,15 +21,11 @@ namespace CouchPotato.ShowUtil
             set { id = value; }
         }
 
-        private string name;
-
         public string Name
         {
             get { return name; }
             set { name = value; }
         }
-
-        private string description;
 
         public string Description
         {
@@ -32,11 +33,30 @@ namespace CouchPotato.ShowUtil
             set { description = value; }
         }
 
-        public Show(int id, string name, string description)
+        public string CoverStorage
+        {
+            get { return coverStorage; }
+            set { coverStorage = value; }
+        }
+
+
+        public int getVotes()
+        {
+            return votes;
+        }
+
+        public void vote()
+        {
+            votes++;
+        }
+
+
+        public Show(int id, string name, string description, string coverStorage)
         {
             Id = id;
             Name = name;
             Description = description;
+            CoverStorage = coverStorage;
         }
     }
 }

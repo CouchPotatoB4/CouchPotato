@@ -8,9 +8,9 @@ namespace CouchPotato.ShowUtil
 {
     class ShowFactory
     {
-        public static Show build(int id, string name, string description)
+        public static Show build(int id, string name, string description, string coverStorage)
         {
-            return new Show(id, name, description);
+            return new Show(id, name, description, coverStorage);
         }
     }
 }

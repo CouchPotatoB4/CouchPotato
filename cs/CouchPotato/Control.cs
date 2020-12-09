@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Net.Http;
 
 namespace CouchPotato
 {
@@ -17,14 +18,15 @@ namespace CouchPotato
     {
         private IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
 
-        public string post(string request)
+        public HttpResponseMessage post(string request)
         {
             //TODO
 
             return null;
         }
 
-        private Lobby createLobby(User host)
+        //PRIVATE
+        public Lobby createLobby(User host)
         {
             return LobbyFactory.build(host);
         }
@@ -45,7 +47,7 @@ namespace CouchPotato
 
         private string[] getGenre(Lobby lobby)
         {
-            return lobby.getGenre();
+            return lobby.Genre;
         }
 
         private void swipeGenre(Lobby lobby, long userId, string genre)
@@ -58,20 +60,20 @@ namespace CouchPotato
             return lobby.Shows;
         }
 
-        private void swipeFilm(Lobby lobby, long userId, long filmId)
+        private void swipeFilm(Lobby lobby, long userId, int showId)
         {
-            lobby.swipeFilm(userId, filmId);
+            lobby.swipeFilm(userId, showId);
         }
 
-        private Image getCoverForFilm(Lobby lobby, long filmId)
+        private Image getCoverForShow(Lobby lobby, int showId)
         {
-            return lobby.getCoverForFilm(filmId);
+            return lobby.getCoverForShow(showId);
         }
 
 
-        private void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes)
+        private void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
         {
-            lobby.setConfiguration(provider, swipes);
+            lobby.setConfiguration(provider, swipes, genresCount);
         }
     }
 }

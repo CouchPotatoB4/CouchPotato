@@ -12,6 +12,7 @@ namespace CouchPotato.UserUtil
         private string name;
         private int swipes;
 
+
         public long ID
         {
             get { return id; }
@@ -25,18 +26,23 @@ namespace CouchPotato.UserUtil
         public int Swipes
         {
             get { return swipes; }
+            set { swipes = value; }
         }
 
-        public User(long id, string name, int swipes)
+        public User(long id, string name)
         {
             this.id = id;
             this.name = name;
-            this.swipes = swipes;
         }
 
-        public void resetSwipes(int swipes)
+        public bool swipe()
         {
-            this.swipes = swipes;
+            if (swipes > 0)
+            {
+                swipes--;
+                return true;
+            }
+            return false;
         }
     }
 }

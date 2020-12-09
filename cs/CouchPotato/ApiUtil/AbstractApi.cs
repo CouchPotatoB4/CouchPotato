@@ -10,8 +10,6 @@ namespace CouchPotato.ApiUtil
 {
     abstract class AbstractApi
     {
-        protected static int PAGE_SIZE = 20;
-
         protected HttpClient client = new HttpClient();
         protected string query;
 

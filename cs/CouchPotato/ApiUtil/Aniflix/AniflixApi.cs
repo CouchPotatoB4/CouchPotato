@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace CouchPotato.ApiUtil.Aniflix
 {
@@ -14,15 +15,17 @@ namespace CouchPotato.ApiUtil.Aniflix
 
     class AniflixApi : AbstractApi, IApi
     {
-        private static string HEADER_SHOW = "show";
-        private static string HEADER_GENRE = HEADER_SHOW + "/genres"; 
+        private static string HEADER_API = "api";
+        private static string HEADER_SHOW = HEADER_API + "/show";
+        private static string HEADER_GENRE = HEADER_SHOW + "/genres";
+        private static string HEADER_STORAGE = "storage";
 
-        private string[] genres;
+        private string[] genres = null;
         private Show[] shows;
 
         private GenreWithShowsJson[] genreWithShows;
 
-        public AniflixApi() : base("https://www2.aniflix.tv/api") { }
+        public AniflixApi() : base("https://www2.aniflix.tv") { }
 
         protected override Task<HttpResponseMessage> get(string header)
         {
@@ -35,9 +38,23 @@ namespace CouchPotato.ApiUtil.Aniflix
             return content.ReadAsStringAsync().Result;
         }
 
-        public Image getCoverForShow(long id)
+        public Image getCoverForShow(int id)
         {
-            throw new NotImplementedException();
+            foreach (Show s in shows)
+            {
+                if (s.Id == id)
+                {
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(query + "/" + HEADER_STORAGE + "/" + s.CoverStorage);
+                    using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
+                    {
+                        var coverStream = response.GetResponseStream();
+                        return new Bitmap(coverStream);
+                    }
+                    
+                }
+            }
+
+            return null;
         }
 
         public Show[] getShows()
@@ -52,7 +69,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                     for (int i = 0; i < shows.Length; i++)
                     {
                         ShowJson show = encrypted[i];
-                        shows[i] = ShowFactory.build(show.id, show.name, show.description);
+                        shows[i] = ShowFactory.build(show.id, show.name, show.description, show.cover_landscape);
                     }
                 }
             }
@@ -62,7 +79,7 @@ namespace CouchPotato.ApiUtil.Aniflix
 
         public Show[] getShows(IList<string> genres)
         {
-            if (genres == null)
+            if (genres == null || genres.Count == 1 && genres[0] == null)
             {
                 getGenres();
             }
@@ -80,7 +97,7 @@ namespace CouchPotato.ApiUtil.Aniflix
 
                             foreach (var l in list)
                             {
-                                showSet.Add(ShowFactory.build(l.id, l.name, l.description));
+                                showSet.Add(ShowFactory.build(l.id, l.name, l.description, l.cover_landscape));
                             }
                         }
                     }
@@ -90,7 +107,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                 return shows;
             }
 
-            return null;
+            return new Show[0];
         }
 
         public Show[] getShows(string genre)
@@ -103,10 +120,10 @@ namespace CouchPotato.ApiUtil.Aniflix
         {
             if (shows != null)
             {
-                Show[] localShows = new Show[PAGE_SIZE];
+                Show[] localShows = new Show[ApiConstants.PAGE_SIZE];
 
-                int start = page * PAGE_SIZE;
-                int end = start + PAGE_SIZE;
+                int start = page * ApiConstants.PAGE_SIZE;
+                int end = start + ApiConstants.PAGE_SIZE;
 
                 if (start < shows.Length)
                 {
@@ -121,7 +138,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                 return localShows;
             }
 
-            return null;
+            return new Show[0];
         }
 
         public string[] getGenres()
@@ -137,7 +154,6 @@ namespace CouchPotato.ApiUtil.Aniflix
                     {
                         string genre = genreWithShows[i].name;
                         genres[i] = genre;
-                        Console.WriteLine(genre);
                     }
                 }
                
