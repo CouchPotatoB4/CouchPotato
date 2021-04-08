@@ -92,7 +92,7 @@ namespace CouchPotato.LobbyUtil
             int height = 0;
 
             if (mode == Mode.FILM_SELECTION) height = shows.Count; 
-            else height = provider.getApi().getGenres().Length;
+            else height = (provider.getApi().getGenres() != null) ? provider.getApi().getGenres().Length : 0;
 
             votes = new bool[width, height];
         }
@@ -168,36 +168,6 @@ namespace CouchPotato.LobbyUtil
 
         public void swipeFilm(long userId, int showId)
         {
-            //if (mode == Mode.FILM_SELECTION)
-            //{
-            //    if (getUser(userId).swipe())
-            //    {
-            //        int row = 0;
-            //        if (shows.Count == 0)
-            //        {
-            //            foreach (Show s in provider.getApi().getShows(genres))
-            //            {
-            //                if (s.Id == showId) break;
-
-            //                row++;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            foreach (Show s in shows)
-            //            {
-            //                if (s.Id == showId) break;
-
-            //                row++;
-            //            }
-            //        }
-
-            //        int column = getUserNumberInSet(userId);
-
-            //        votes[column, row] = true;
-            //    }               
-            //}
-
             if (mode == Mode.FILM_SELECTION)
             {
                 foreach (Show s in shows)

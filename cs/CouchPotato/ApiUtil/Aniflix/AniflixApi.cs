@@ -15,9 +15,10 @@ namespace CouchPotato.ApiUtil.Aniflix
 
     class AniflixApi : AbstractApi, IApi
     {
+        private static string SHOW = "show";
         private static string HEADER_API = "api";
-        private static string HEADER_SHOW = HEADER_API + "/show";
-        private static string HEADER_GENRE = HEADER_SHOW + "/genres";
+        private static string HEADER_SHOW = HEADER_API + "/" + SHOW + "/index";
+        private static string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
         private static string HEADER_STORAGE = "storage";
 
         private string[] genres = null;
@@ -25,7 +26,10 @@ namespace CouchPotato.ApiUtil.Aniflix
 
         private GenreWithShowsJson[] genreWithShows;
 
-        public AniflixApi() : base("https://www2.aniflix.tv") { }
+        public AniflixApi() : base("https://www2.aniflix.tv") 
+        {
+            client.DefaultRequestHeaders.Add("User-Agent", "Aniflix_App");
+        }
 
         protected override Task<HttpResponseMessage> get(string header)
         {

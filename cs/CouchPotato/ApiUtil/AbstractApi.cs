@@ -18,9 +18,7 @@ namespace CouchPotato.ApiUtil
             this.query = query;
         }
 
-        //HAS TO BE PROTECTED but for testing its public
-
-        public Task<HttpResponseMessage> get()
+        protected Task<HttpResponseMessage> get()
         {
             return client.GetAsync(query);
         }

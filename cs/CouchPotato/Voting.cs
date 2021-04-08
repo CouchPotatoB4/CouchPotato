@@ -15,7 +15,7 @@ namespace CouchPotato
     using User = UserUtil.User;
     using Show = ShowUtil.Show;
 
-    public partial class FormVoting : Form
+    partial class FormVoting : Form
     {
         private int showNumber;
 
@@ -23,12 +23,9 @@ namespace CouchPotato
         private User user;
         private Show show;
 
-
-        public FormVoting()
+        public FormVoting(Control c)
         {
             InitializeComponent();
-
-            Control c = new Control();
 
             user = UserFactory.build("The Potato");
 
