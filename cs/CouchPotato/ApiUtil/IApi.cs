@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CouchPotato.ShowUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +9,6 @@ using System.Drawing;
 
 namespace CouchPotato.ApiUtil
 {
-    using Show = CouchPotato.ShowUtil.Show;
-
     interface IApi
     {
         Show[] getShows();

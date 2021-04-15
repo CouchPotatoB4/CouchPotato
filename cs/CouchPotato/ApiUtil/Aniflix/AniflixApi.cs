@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CouchPotato.ShowUtil;
+using CouchPotato.ApiUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +13,8 @@ using System.Net;
 
 namespace CouchPotato.ApiUtil.Aniflix
 {
-    using Show = CouchPotato.ShowUtil.Show;
-    using ShowFactory = CouchPotato.ShowUtil.ShowFactory;
-
     class AniflixApi : AbstractApi, IApi
-    {
+    {   
         private static string SHOW = "show";
         private static string HEADER_API = "api";
         private static string HEADER_SHOW = HEADER_API + "/" + SHOW + "/index";
@@ -42,19 +42,29 @@ namespace CouchPotato.ApiUtil.Aniflix
             return content.ReadAsStringAsync().Result;
         }
 
+        //TODO
         public Image getCoverForShow(int id)
         {
             foreach (Show s in shows)
             {
                 if (s.Id == id)
                 {
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(query + "/" + HEADER_STORAGE + "/" + s.CoverStorage);
-                    using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
+                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverStorage;
+                    try
                     {
-                        var coverStream = response.GetResponseStream();
-                        return new Bitmap(coverStream);
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+                        webRequest.Headers.Add(HttpRequestHeader.Authorization, "User-Agent=Aniflix_App");
+
+                        using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
+                        {
+                            var coverStream = response.GetResponseStream();
+                            return new Bitmap(coverStream);
+                        }
                     }
-                    
+                    catch (Exception e)
+                    {
+                        throw new Exceptions.ApiChangedException("GET/image", url, e);
+                    }
                 }
             }
 
@@ -67,13 +77,20 @@ namespace CouchPotato.ApiUtil.Aniflix
             {
                 if (isStatusCodeOk())
                 {
-                    var encrypted = JsonConvert.DeserializeObject<List<ShowJson>>(getResponseBody(HEADER_SHOW));
-
-                    shows = new Show[encrypted.Count];
-                    for (int i = 0; i < shows.Length; i++)
+                    try
                     {
-                        ShowJson show = encrypted[i];
-                        shows[i] = ShowFactory.build(show.id, show.name, show.description, show.cover_landscape);
+                        var encrypted = JsonConvert.DeserializeObject<List<ShowJson>>(getResponseBody(HEADER_SHOW));
+
+                        shows = new Show[encrypted.Count];
+                        for (int i = 0; i < shows.Length; i++)
+                        {
+                            ShowJson show = encrypted[i];
+                            shows[i] = ShowFactory.build(show.id, show.name, show.description, show.cover_landscape);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exceptions.ApiChangedException("GET/show", HEADER_SHOW);
                     }
                 }
             }
@@ -151,13 +168,20 @@ namespace CouchPotato.ApiUtil.Aniflix
             {
                 if (isStatusCodeOk())
                 {
-                    genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
-
-                    genres = new string[genreWithShows.Length];
-                    for (int i = 0; i < genres.Length; i++)
+                    try
                     {
-                        string genre = genreWithShows[i].name;
-                        genres[i] = genre;
+                        genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
+
+                        genres = new string[genreWithShows.Length];
+                        for (int i = 0; i < genres.Length; i++)
+                        {
+                            string genre = genreWithShows[i].name;
+                            genres[i] = genre;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exceptions.ApiChangedException("GET/genre", HEADER_GENRE);
                     }
                 }
                

@@ -1,4 +1,8 @@
-﻿using CouchPotato.LobbyUtil;
+﻿using CouchPotato.ApiUtil;
+using CouchPotato.LobbyUtil;
+using CouchPotato.UserUtil;
+using CouchPotato.ShowUtil;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +13,6 @@ using System.Net.Http;
 
 namespace CouchPotato
 {
-    using Lobby = LobbyUtil.Lobby;
-    using User = UserUtil.User;
-    using Show = ShowUtil.Show;
-    using Provider = ApiUtil.Provider;
-
     class Control
     {
         private IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 

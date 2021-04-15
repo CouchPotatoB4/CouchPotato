@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CouchPotato.UserUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.LobbyUtil
 {
-    using User = CouchPotato.UserUtil.User;
-
     static class LobbyFactory
     {
         private static ISet<long> usedId = new SortedSet<long>();

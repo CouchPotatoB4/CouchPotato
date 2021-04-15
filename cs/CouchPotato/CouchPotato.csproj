@@ -52,6 +52,7 @@
     <Compile Include="ApiUtil\Aniflix\AniflixApi.cs" />
     <Compile Include="ApiUtil\Aniflix\Jsons.cs" />
     <Compile Include="ApiUtil\ApiConstants.cs" />
+    <Compile Include="ApiUtil\Exceptions\ApiChangedException.cs" />
     <Compile Include="ApiUtil\IApi.cs" />
     <Compile Include="ApiUtil\Provider.cs" />
     <Compile Include="Control.cs" />

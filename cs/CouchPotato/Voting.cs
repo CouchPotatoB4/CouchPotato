@@ -26,19 +26,19 @@ namespace CouchPotato
         public FormVoting(Control c)
         {
             InitializeComponent();
-
+            Console.WriteLine("Initalize");
             user = UserFactory.build("The Potato");
-
+            Console.WriteLine("Builded User: " + user.Name);
             lobby = c.createLobby(user);
-
+            Console.WriteLine("Created Lobby: ");
             lobby.setConfiguration(ApiUtil.Provider.Aniflix, 5, 1);
-
+            Console.WriteLine("Set Configuration.");
             lobby.nextMode();
-
+            Console.WriteLine("Switched the Mode to Genre Selection.");
             lobby.swipeGenre(user.ID, "Action");
-
+            Console.WriteLine("Selected Genre Action");
             lobby.nextMode();
-
+            Console.WriteLine("Switched the Mode to Movie Selection.");
             next();
         }
 

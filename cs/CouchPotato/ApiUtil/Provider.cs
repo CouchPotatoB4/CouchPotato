@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CouchPotato.ApiUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,8 +10,6 @@ using CouchPotato.ApiUtil;
 
 namespace CouchPotato.ApiUtil
 {
-    using AniflixApi = CouchPotato.ApiUtil.Aniflix.AniflixApi;
-
     enum Provider
     {
         Netflix, AmazonPrime, Aniflix
@@ -20,7 +20,7 @@ namespace CouchPotato.ApiUtil
         //TODO
         private static IApi NETFLIX;
         private static IApi AMAZON_PRIME;
-        private static IApi ANIFLIX = new AniflixApi();
+        private static IApi ANIFLIX = new Aniflix.AniflixApi();
 
         public static IApi getApi(this Provider provider)
         {

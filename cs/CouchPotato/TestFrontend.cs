@@ -17,27 +17,14 @@ namespace CouchPotato
 
     public partial class TestFrontend : Form
     {
-        Provider prov = Provider.Aniflix;
-
         public TestFrontend()
         {
             InitializeComponent();
         }
 
-        private void BtnGet_Click(object sender, EventArgs e)
+        public void setBackgroundImage(Image image)
         {
-            var r = ((AniflixApi)prov.getApi()).getStatusCode();
-            txtStatus.Text = r.ToString(); 
-        }
-
-        private void BtnGetFilm_Click(object sender, EventArgs e)
-        {
-            var shows = prov.getApi().getShows();
-
-            foreach (var show in shows)
-            {
-                Console.WriteLine(show.Name);
-            }
+            this.BackgroundImage = image;
         }
     }
 }
