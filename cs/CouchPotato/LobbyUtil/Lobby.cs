@@ -1,17 +1,16 @@
-﻿using System;
+﻿using CouchPotato.UserUtil;
+using CouchPotato.ShowUtil;
+using CouchPotato.ApiUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using CouchPotato.ApiUtil;
 
 namespace CouchPotato.LobbyUtil
 {
-    using User = UserUtil.User;
-    using Provider = ApiUtil.Provider;
-    using Show = ShowUtil.Show;
-
     class Lobby
     {
         private long id;
@@ -43,6 +42,11 @@ namespace CouchPotato.LobbyUtil
             }
             if (host.ID == id) return host;
             return null;
+        }
+
+        public ISet<User> getUser()
+        {
+            return users;
         }
 
         public void setConfiguration(Provider? provider, int swipes, int genresCount)
