@@ -8,14 +8,23 @@ namespace CouchPotato.ApiUtil.Exceptions
 {
     class ApiChangedException : Exception
     {
+        private Provider provider;
+
+        public Provider Provider
+        {
+            get { return provider; }
+        }
+
         public ApiChangedException() : base() { }
        
-        public ApiChangedException(string message) : base(message) { }
+        public ApiChangedException(Provider provider, string message) : base("Error at provider " + provider.ToString() + ".\n" + message)
+        {
+            this.provider = provider;
+        }
 
-        public ApiChangedException(string message, Exception e) : base(message, e) { }
-
-        public ApiChangedException(string request, string url) : base("Error in the " + request + " request, with the URL " + url + " . ") { }
-
-        public ApiChangedException(string request, string url, Exception e) : base("Error in the " + request + " request, with the URL " + url + " . ", e) { }
+        public ApiChangedException(Provider provider, string message, Exception e) : base("Error at provider " + provider.ToString() + ".\n" + message, e) 
+        {
+            this.provider = provider;
+        }
     }
 }

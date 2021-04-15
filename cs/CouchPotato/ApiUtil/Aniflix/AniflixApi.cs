@@ -63,7 +63,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                     }
                     catch (Exception e)
                     {
-                        throw new Exceptions.ApiChangedException("GET/image", url, e);
+                        throw new Exceptions.ApiChangedException(Provider.Aniflix, "Error in request GET/image.", e);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                     }
                     catch (Exception e)
                     {
-                        throw new Exceptions.ApiChangedException("GET/show", HEADER_SHOW);
+                        throw new Exceptions.ApiChangedException(Provider.Aniflix, "Error in request GET/show.", e);
                     }
                 }
             }
@@ -181,7 +181,7 @@ namespace CouchPotato.ApiUtil.Aniflix
                     }
                     catch (Exception e)
                     {
-                        throw new Exceptions.ApiChangedException("GET/genre", HEADER_GENRE);
+                        throw new Exceptions.ApiChangedException(Provider.Aniflix, "Error in request GET/genre.", e);
                     }
                 }
                

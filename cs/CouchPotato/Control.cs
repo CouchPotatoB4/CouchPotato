@@ -1,4 +1,5 @@
 ﻿using CouchPotato.ApiUtil;
+using CouchPotato.ApiUtil.Exceptions;
 using CouchPotato.LobbyUtil;
 using CouchPotato.UserUtil;
 using CouchPotato.ShowUtil;
@@ -20,7 +21,23 @@ namespace CouchPotato
         public HttpResponseMessage post(string request)
         {
             //TODO
+            try
+            {
 
+            }
+            catch (ApiChangedException e)
+            {
+                Console.WriteLine(e);
+                switch (e.Provider)
+                {
+                    case Provider.Aniflix:
+                        break;
+                    case Provider.Netflix:
+                        break;
+                    case Provider.AmazonPrime:
+                        break;
+                }
+            }
             return null;
         }
 
