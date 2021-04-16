@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchPotato", "CouchPotato.csproj", "{230D4ECA-64B2-4FA5-A179-136BD6B80A20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22CCEB0F-4C10-4142-9931-62691266D387}
+	EndGlobalSection
+EndGlobal
