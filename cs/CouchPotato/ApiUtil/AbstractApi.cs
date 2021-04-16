@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace CouchPotato.ApiUtil
 {
-    abstract class AbstractApi
+    public abstract class AbstractApi
     {
         protected HttpClient client = new HttpClient();
         protected string query;

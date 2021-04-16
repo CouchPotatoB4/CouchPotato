@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.ShowUtil
 {
-    class Show
+    public class Show
     {
         private int id;
         private string name;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.ApiUtil
 {
-    class ApiConstants
+    public class ApiConstants
     {
         public static int PAGE_SIZE = 20;
     }

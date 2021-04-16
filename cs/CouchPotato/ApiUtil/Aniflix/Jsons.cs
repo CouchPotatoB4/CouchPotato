@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.ApiUtil.Aniflix
 {
-    class ShowJson
+    public class ShowJson
     {
         public int id { get; set; }
         public string name { get; set; }

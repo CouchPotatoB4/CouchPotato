@@ -14,7 +14,7 @@ using System.Net.Http;
 
 namespace CouchPotato
 {
-    class Control
+    public class Control
     {
         private IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
 

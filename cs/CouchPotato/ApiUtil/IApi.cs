@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace CouchPotato.ApiUtil
 {
-    interface IApi
+    public interface IApi
     {
         Show[] getShows();
 

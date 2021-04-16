@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.ApiUtil.Exceptions
 {
-    class ApiChangedException : Exception
+    public class ApiChangedException : Exception
     {
         private Provider provider;
 

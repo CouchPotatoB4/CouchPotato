@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace CouchPotato.LobbyUtil
 {
-    class Lobby
+    public class Lobby
     {
         private long id;
         private ISet<User> users = new HashSet<User>();

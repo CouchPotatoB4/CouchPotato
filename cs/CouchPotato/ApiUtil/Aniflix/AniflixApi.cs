@@ -13,7 +13,7 @@ using System.Net;
 
 namespace CouchPotato.ApiUtil.Aniflix
 {
-    class AniflixApi : AbstractApi, IApi
+    public class AniflixApi : AbstractApi, IApi
     {   
         private static string SHOW = "show";
         private static string HEADER_API = "api";

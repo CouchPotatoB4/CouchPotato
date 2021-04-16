@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.UserUtil
 {
-    class User
+    public class User
     {
         private long id;
         private string name;

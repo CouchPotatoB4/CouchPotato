@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.LobbyUtil
 {
-    static class LobbyFactory
+    public static class LobbyFactory
     {
         private static ISet<long> usedId = new SortedSet<long>();
 

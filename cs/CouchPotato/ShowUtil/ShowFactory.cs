@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.ShowUtil
 {
-    class ShowFactory
+    public class ShowFactory
     {
         public static Show build(int id, string name, string description, string coverStorage)
         {

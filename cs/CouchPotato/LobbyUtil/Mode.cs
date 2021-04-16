@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.LobbyUtil
 {
-    enum Mode
+    public enum Mode
     {
         JOIN, GENRE_SELECTION, FILM_SELECTION
     }

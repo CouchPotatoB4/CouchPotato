@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.UserUtil
 {
-    static class UserFactory
+    public static class UserFactory
     {
         private static ISet<long> usedId = new SortedSet<long>();
 

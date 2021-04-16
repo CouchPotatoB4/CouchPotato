@@ -10,7 +10,7 @@ using CouchPotato.ApiUtil;
 
 namespace CouchPotato.ApiUtil
 {
-    enum Provider
+    public enum Provider
     {
         Netflix, AmazonPrime, Aniflix
     }
