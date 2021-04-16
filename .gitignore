@@ -4,3 +4,8 @@
 
 *.sqlite
 /cs/CouchPotato/obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+/cs/CouchPotatoTestProject/bin/Debug/netcoreapp3.1
+/cs/CouchPotatoTestProject/obj/Debug/netcoreapp3.1
+/cs/CouchPotatoTestProject/obj/Release/netcoreapp3.1
+/cs/CouchPotato/.vs/CouchPotato/DesignTimeBuild
+/cs/CouchPotato/.vs/CouchPotato/config
