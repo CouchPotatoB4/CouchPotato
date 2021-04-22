@@ -1,11 +1,67 @@
-﻿################################################################################
+################################################################################
 # Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
 ################################################################################
 
-*.sqlite
-/cs/CouchPotato/obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
-/cs/CouchPotatoTestProject/bin/Debug/netcoreapp3.1
-/cs/CouchPotatoTestProject/obj/Debug/netcoreapp3.1
-/cs/CouchPotatoTestProject/obj/Release/netcoreapp3.1
-/cs/CouchPotato/.vs/CouchPotato/DesignTimeBuild
-/cs/CouchPotato/.vs/CouchPotato/config
+/cs/CouchPotato/obj/Debug/
+/cs/CouchPotato/bin/Debug/
+/cs/CouchPotatoTestProject/obj/Debug/
+/cs/CouchPotatoTestProject/bin/Debug/
+/cs/CouchPotato/.vs/CouchPotato/config/
+/cs/CouchPotato/.vs/CouchPotato/DesignTimeBuild/
+/cs/CouchPotato/TestResults/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.sqlite*
+*.suo
+*.dll
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Bb]in/
+[Oo]bj/
+# build folder is nowadays used for build scripts and should not be ignored
+#build/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
+*.scc
+/CouchPotato/.vs/CouchPotato/v16/TestStore/0
+/cs/CouchPotato/.vs/CouchPotato/v16/TestStore/0
