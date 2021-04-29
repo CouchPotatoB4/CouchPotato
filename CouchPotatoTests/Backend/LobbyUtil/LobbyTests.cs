@@ -1,6 +1,9 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CouchPotato.Backend.LobbyUtil;
 using CouchPotato.Backend.UserUtil;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CouchPotato_TestProject
 {
