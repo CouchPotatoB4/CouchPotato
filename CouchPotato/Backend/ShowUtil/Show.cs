@@ -40,9 +40,9 @@ namespace CouchPotato.Backend.ShowUtil
         }
 
 
-        public int getVotes()
+        public int Votes
         {
-            return votes;
+            get { return votes; }
         }
 
         public void vote()

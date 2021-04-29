@@ -46,7 +46,13 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public ISet<User> getUser()
         {
-            return users;
+            ISet<User> allUser = new HashSet<User>();
+            allUser.Add(host);
+            foreach (User u in users)
+            {
+                allUser.Add(u);
+            }
+            return allUser;
         }
 
         public void setConfiguration(Provider? provider, int swipes, int genresCount)
