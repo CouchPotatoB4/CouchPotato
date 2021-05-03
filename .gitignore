@@ -65,3 +65,6 @@ x64/
 *.scc
 /CouchPotato/.vs/CouchPotato/v16/TestStore/0
 /cs/CouchPotato/.vs/CouchPotato/v16/TestStore/0
+/CouchPotato/.vs/CouchPotato/DesignTimeBuild
+/CouchPotato/.vs/CouchPotato/v16/lut
+/.vs
