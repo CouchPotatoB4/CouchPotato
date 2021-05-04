@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace CouchPotato.Backend.ShowUtil
 {
-    public class Show
+    public partial class Show : Votable
     {
         private int id;
-        private string name;
-        private string description;
-        private string coverStorage;
-        private int votes;
-
 
         public int Id
         {
@@ -21,11 +16,7 @@ namespace CouchPotato.Backend.ShowUtil
             set { id = value; }
         }
 
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        private string description;
 
         public string Description
         {
@@ -33,30 +24,19 @@ namespace CouchPotato.Backend.ShowUtil
             set { description = value; }
         }
 
-        public string CoverStorage
+        private string coverPath;
+
+        public string CoverPath
         {
-            get { return coverStorage; }
-            set { coverStorage = value; }
+            get { return coverPath; }
+            set { coverPath = value; }
         }
 
-
-        public int getVotes()
-        {
-            return votes;
-        }
-
-        public void vote()
-        {
-            votes++;
-        }
-
-
-        public Show(int id, string name, string description, string coverStorage)
+        public Show(int id, string name, string description, string coverStorage) : base(name)
         {
             Id = id;
-            Name = name;
             Description = description;
-            CoverStorage = coverStorage;
+            CoverPath = coverStorage;
         }
     }
 }

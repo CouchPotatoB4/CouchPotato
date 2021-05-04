@@ -21,7 +21,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
         private static string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
         private static string HEADER_STORAGE = "storage";
 
-        private string[] genres = null;
+        private Genre[] genres;
         private Show[] shows;
 
         private GenreWithShowsJson[] genreWithShows;
@@ -49,7 +49,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             {
                 if (s.Id == id)
                 {
-                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverStorage;
+                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverPath;
                     try
                     {
                         HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -85,7 +85,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                         for (int i = 0; i < shows.Length; i++)
                         {
                             ShowJson show = encrypted[i];
-                            shows[i] = ShowFactory.build(show.id, show.name, show.description, show.cover_landscape);
+                            shows[i] = VotableFactory.build(show.id, show.name, show.description, show.cover_landscape);
                         }
                     }
                     catch (Exception e)
@@ -98,9 +98,9 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return shows;
         }
 
-        public Show[] getShows(IList<string> genres)
+        public Show[] getShows(ISet<Genre> genres)
         {
-            if (genres == null || genres.Count == 1 && genres[0] == null)
+            if (genres == null)
             {
                 getGenres();
             }
@@ -108,17 +108,18 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             if (isStatusCodeOk())
             {
                 ISet<Show> showSet = new HashSet<Show>();
-                foreach (string genre in genres)
+                foreach (Genre genre in genres)
                 {
                     foreach (var swg in genreWithShows)
                     {
-                        if (genre.Equals(swg.name))
+                        string gn = genre.Name;
+                        if (gn.Equals(swg.name))
                         {
                             var list = swg.shows;
 
                             foreach (var l in list)
                             {
-                                showSet.Add(ShowFactory.build(l.id, l.name, l.description, l.cover_landscape));
+                                showSet.Add(VotableFactory.build(l.id, l.name, l.description, l.cover_landscape));
                             }
                         }
                     }
@@ -131,9 +132,11 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return new Show[0];
         }
 
-        public Show[] getShows(string genre)
+        public Show[] getShows(Genre genre)
         {
-            return getShows(new string[] { genre });
+            ISet<Genre> genres = new HashSet<Genre>();
+            genres.Add(genre);
+            return getShows(genres);
         }
 
         //Beginning from 0
@@ -162,7 +165,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return new Show[0];
         }
 
-        public string[] getGenres()
+        public Genre[] getGenres()
         {
             if (genres == null)
             {
@@ -172,11 +175,11 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                     {
                         genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
 
-                        genres = new string[genreWithShows.Length];
+                        genres = new Genre[genreWithShows.Length];
                         for (int i = 0; i < genres.Length; i++)
                         {
                             string genre = genreWithShows[i].name;
-                            genres[i] = genre;
+                            genres[i] = VotableFactory.build(genre);
                         }
                     }
                     catch (Exception e)
