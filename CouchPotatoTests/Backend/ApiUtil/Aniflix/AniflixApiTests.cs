@@ -13,8 +13,8 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
 		public void AniflixApiTest()
 		{
 			AniflixApi api = new AniflixApi();
-			ShowUtil.Show[] shows = api.getShows();
-			Assert.IsTrue(shows.Length > 0);
+			var shows = api.getShows();
+			Assert.IsNotNull(shows);
 		}
 	}
 }

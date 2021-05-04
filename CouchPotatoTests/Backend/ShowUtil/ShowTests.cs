@@ -29,12 +29,12 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 			try
 			{
 				Show show2 = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
+				Assert.Fail("Exception for id duplication expected");
 			}
 			catch (Exception)
 			{
 				// Test passed
 			}
-			Assert.Fail("Exception for id duplication expected");
 		}
 	}
 }
