@@ -24,19 +24,19 @@ namespace CouchPotato.Backend.ShowUtil
             set { description = value; }
         }
 
-        private string coverStorage;
+        private string coverPath;
 
-        public string CoverStorage
+        public string CoverPath
         {
-            get { return coverStorage; }
-            set { coverStorage = value; }
+            get { return coverPath; }
+            set { coverPath = value; }
         }
 
         public Show(int id, string name, string description, string coverStorage) : base(name)
         {
             Id = id;
             Description = description;
-            CoverStorage = coverStorage;
+            CoverPath = coverStorage;
         }
     }
 }

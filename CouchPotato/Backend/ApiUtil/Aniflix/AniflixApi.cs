@@ -49,7 +49,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             {
                 if (s.Id == id)
                 {
-                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverStorage;
+                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverPath;
                     try
                     {
                         HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);

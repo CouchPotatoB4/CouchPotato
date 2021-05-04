@@ -18,7 +18,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private ISet<User> users = new HashSet<User>();
         private ISet<Show> selectedShows = new HashSet<Show>();
         private ISet<Genre> selectedGenres = new HashSet<Genre>();
-        private Voting voting = new Voting();
+        private VotingEvaluation evaluation = new VotingEvaluation();
         private Provider provider;
         private Mode mode;
         private int sSwipes, gSwipes;
@@ -84,7 +84,7 @@ namespace CouchPotato.Backend.LobbyUtil
             else if (mode == Mode.GENRE_SELECTION)
             {
                 mode = Mode.FILM_SELECTION;
-                selectedGenres = voting.getGenreResult(selectedGenres);
+                selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
                 selectedShows = new HashSet<Show>(provider.getApi().getShows(selectedGenres));
                 setUserSwipes(sSwipes);
             }
@@ -192,12 +192,12 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public ISet<Genre> getGenreResults()
         {
-            return voting.getGenreResult(selectedGenres);
+            return evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
         }
 
         public ISet<Show> getShowResults()
         {
-            return voting.getShowResults(selectedShows);
+            return evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
         }
     }
 }
