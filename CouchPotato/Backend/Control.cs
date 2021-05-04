@@ -1,5 +1,5 @@
 ﻿using CouchPotato.Backend.ApiUtil;
-using CouchPotato.Backend.ApiUtil.Exceptions;
+using CouchPotato.Backend.Exceptions;
 using CouchPotato.Backend.LobbyUtil;
 using CouchPotato.Backend.UserUtil;
 using CouchPotato.Backend.ShowUtil;
