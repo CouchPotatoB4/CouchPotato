@@ -10,25 +10,25 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 		public void ShowTest()
 		{
 			Show showFromConstructor = new Show(1, "TestShow", "TestDescription", "TestPath");
-			Show showFromFactory = ShowFactory.build(1, "TestShow", "TestDescription", "TestPath");
+			Show showFromFactory = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
 
 			Assert.AreEqual(showFromConstructor.Id, showFromFactory.Id);
 			Assert.AreEqual(showFromConstructor.Name, showFromFactory.Name);
 			Assert.AreEqual(showFromConstructor.Description, showFromFactory.Description);
-			Assert.AreEqual(showFromConstructor.CoverStorage, showFromFactory.CoverStorage);
+			Assert.AreEqual(showFromConstructor.CoverPath, showFromFactory.CoverPath);
 
-			int oldVotesCount = showFromConstructor.getVotes();
-			showFromConstructor.vote();
-			Assert.AreNotEqual(oldVotesCount, showFromConstructor.getVotes());
+			int oldVotesCount = showFromConstructor.Votes;
+			showFromConstructor.Vote();
+			Assert.AreNotEqual(oldVotesCount, showFromConstructor.Votes);
 		}
 
 		[TestMethod()]
 		public void ShowTest2()
 		{
-			Show show1 = ShowFactory.build(1, "TestShow", "TestDescription", "TestPath");
+			Show show1 = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
 			try
 			{
-				Show show2 = ShowFactory.build(1, "TestShow", "TestDescription", "TestPath");
+				Show show2 = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
 			}
 			catch (Exception)
 			{
