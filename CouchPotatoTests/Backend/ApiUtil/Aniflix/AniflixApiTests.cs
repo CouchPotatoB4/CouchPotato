@@ -10,11 +10,12 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
 	public class AniflixApiTests
 	{
 		[TestMethod()]
-		public void AniflixApiTest()
+		public void AniflixApiConnectionTest()
 		{
 			AniflixApi api = new AniflixApi();
-			var shows = api.getShows();
-			Assert.IsNotNull(shows);
+			Assert.AreEqual(200, api.getStatusCode());
+			Assert.IsNotNull(api.getGenres());
+			Assert.IsNotNull(api.getShows());
 		}
 	}
 }
