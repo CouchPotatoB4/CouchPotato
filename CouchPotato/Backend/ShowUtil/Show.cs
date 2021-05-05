@@ -32,6 +32,19 @@ namespace CouchPotato.Backend.ShowUtil
             set { coverPath = value; }
         }
 
+        private ISet<Genre> genres;
+
+        public ISet<Genre> Genres
+        {
+            get { return genres; }     
+        }
+
+        public void AddGenre(Genre genre)
+        {
+            genres.Add(genre);
+        }
+
+
         public Show(int id, string name, string description, string coverStorage) : base(name)
         {
             Id = id;

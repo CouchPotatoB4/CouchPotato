@@ -21,8 +21,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
         private static string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
         private static string HEADER_STORAGE = "storage";
 
-        private GenreWithShowsJson[] genreWithShows;
-
         public AniflixApi() : base("https://www2.aniflix.tv") 
         {
             client.DefaultRequestHeaders.Add("User-Agent", "Aniflix_App");
@@ -75,13 +73,34 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 {
                     try
                     {
-                        var encrypted = JsonConvert.DeserializeObject<List<ShowJson>>(getResponseBody(HEADER_SHOW));
-
-                        shows = new Show[encrypted.Count];
-                        for (int i = 0; i < shows.Length; i++)
+                        var allShows = JsonConvert.DeserializeObject<List<ShowJson>>(getResponseBody(HEADER_SHOW));
+                        shows = new Show[allShows.Count];
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exceptions.ApiChangedException(Provider.Aniflix, "Error in request GET/show.", e);
+                    }
+                    try
+                    {
+                        var genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
+                        int showCount = 0;
+                        foreach (GenreWithShowsJson gwsJson in genreWithShows)
                         {
-                            ShowJson show = encrypted[i];
-                            shows[i] = VotableFactory.build(show.id, show.name, show.description, show.cover_landscape);
+                            var showsWithThisGenre = gwsJson.shows;
+                            foreach (ShowJson sJson in showsWithThisGenre)
+                            {
+                                int newShow = showIsNew(sJson.id, sJson.name);
+                                if (newShow == -1)
+                                {
+                                    shows[showCount] = VotableFactory.buildShow(sJson.id, sJson.name, sJson.description, sJson.cover_landscape);
+                                    shows[showCount].AddGenre(getGenre(gwsJson.name));
+                                    showCount++;
+                                }
+                                else
+                                {
+                                    shows[newShow].AddGenre(getGenre(gwsJson.name));
+                                }
+                            }
                         }
                     }
                     catch (Exception e)
@@ -94,38 +113,44 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return shows;
         }
 
+        private int showIsNew(int id, string name)
+        {
+            for (int i = 0; i < shows.Length; i++)
+            {
+                Show s = shows[i];
+                if (s == null) break;
+                if (s.Id == id && s.Name == name) return i;
+            }
+            return -1;
+        }
+
+        private Genre getGenre(string name)
+        {
+            foreach (Genre g in genres)
+            {
+                if (g.Name.Equals(name)) return g;
+            }
+            return null;
+        }
+
         public Show[] getShows(ISet<Genre> genres)
         {
-            if (genres == null)
-            {
-                getGenres();
-            }
+            if (genres == null) getGenres();
+            if (shows == null) getShows();
 
-            if (isStatusCodeOk())
+            ISet<Show> showSet = new HashSet<Show>();
+            foreach (Show s in shows)
             {
-                ISet<Show> showSet = new HashSet<Show>();
-                foreach (Genre genre in genres)
+                foreach (Genre g in s.Genres)
                 {
-                    foreach (var swg in genreWithShows)
+                    if (genres.Contains(g))
                     {
-                        string gn = genre.Name;
-                        if (gn.Equals(swg.name))
-                        {
-                            var list = swg.shows;
-
-                            foreach (var l in list)
-                            {
-                                showSet.Add(VotableFactory.build(l.id, l.name, l.description, l.cover_landscape));
-                            }
-                        }
+                        showSet.Add(s);
+                        break;
                     }
                 }
-                if (showSet.Count > 0) shows = showSet.ToArray();
-
-                return shows;
             }
-
-            return new Show[0];
+            return showSet.ToArray();
         }
 
         public Show[] getShows(Genre genre)
@@ -138,27 +163,24 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
         //Beginning from 0
         public Show[] getShows(int page)
         {
-            if (shows != null)
+            if (shows == null) getShows();
+
+            Show[] localShows = new Show[ApiConstants.PAGE_SIZE];
+
+            int start = page * ApiConstants.PAGE_SIZE;
+            int end = start + ApiConstants.PAGE_SIZE;
+
+            if (start < shows.Length)
             {
-                Show[] localShows = new Show[ApiConstants.PAGE_SIZE];
+                end = end < shows.Length ? end : shows.Length;
 
-                int start = page * ApiConstants.PAGE_SIZE;
-                int end = start + ApiConstants.PAGE_SIZE;
-
-                if (start < shows.Length)
+                for (int i = start; i < end; i++)
                 {
-                    end = end < shows.Length ? end : shows.Length;
-
-                    for (int i = start; i < end; i++)
-                    {
-                        localShows[i - start] = shows[i];
-                    }
+                    localShows[i - start] = shows[i];
                 }
-
-                return localShows;
             }
 
-            return new Show[0];
+            return localShows;
         }
 
         public Genre[] getGenres()
@@ -169,13 +191,13 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 {
                     try
                     {
-                        genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
+                        var genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
 
                         genres = new Genre[genreWithShows.Length];
                         for (int i = 0; i < genres.Length; i++)
                         {
                             string genre = genreWithShows[i].name;
-                            genres[i] = VotableFactory.build(genre);
+                            genres[i] = VotableFactory.builGenre(genre);
                         }
                     }
                     catch (Exception e)
