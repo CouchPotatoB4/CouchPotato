@@ -8,7 +8,7 @@ namespace CouchPotato.Backend.ShowUtil
 {
     public class VotableFactory
     {
-        public static Genre builGenre(string name)
+        public static Genre buildGenre(string name)
         {
             return new Genre(name);
         }

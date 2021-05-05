@@ -10,7 +10,7 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 		public void ShowTest()
 		{
 			Show showFromConstructor = new Show(1, "TestShow", "TestDescription", "TestPath");
-			Show showFromFactory = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
+			Show showFromFactory = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");
 
 			Assert.AreEqual(showFromConstructor.Id, showFromFactory.Id);
 			Assert.AreEqual(showFromConstructor.Name, showFromFactory.Name);
@@ -25,10 +25,10 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 		[TestMethod()]
 		public void ShowTest2()
 		{
-			Show show1 = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
+			Show show1 = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");
 			try
 			{
-				Show show2 = VotableFactory.build(1, "TestShow", "TestDescription", "TestPath");
+				Show show2 = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");
 				Assert.Fail("Exception for id duplication expected");
 			}
 			catch (Exception)

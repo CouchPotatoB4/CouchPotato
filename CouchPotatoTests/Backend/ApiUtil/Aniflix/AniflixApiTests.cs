@@ -19,8 +19,8 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
 				Show[] testShows = new Show[10];
                 for (int i = 0; i < 10; i++)
                 {
-                    testGenres[i] = VotableFactory.build("Genre");
-                    testShows[i] = VotableFactory.build(1, "Show", "Description", "Path");
+                    testGenres[i] = VotableFactory.buildGenre("Genre");
+                    testShows[i] = VotableFactory.buildShow(1, "Show", "Description", "Path");
                 }
 
                 base.genres = testGenres;
@@ -40,9 +40,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
             Genre[] genres = filledApi.getGenres();
             Assert.IsNotNull(genres);
             Assert.IsNotNull(filledApi.getShows());
-            Assert.IsNotNull(filledApi.getShows(VotableFactory.build("Adventure")));
             Assert.IsNotNull(filledApi.getShows(0));
-            Assert.IsNotNull(filledApi.getShows(new HashSet<Genre>()));
 		}
 
         [TestMethod()]
@@ -50,23 +48,21 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
         {
             PseudoAniflixApi emptyApi = new PseudoAniflixApi(false);
 
-            if (emptyApi.isHTTPStatusCodeOk())
-            {
-                Assert.IsNotNull(emptyApi.getGenres());
-                Assert.IsNotNull(emptyApi.getShows());
-                return;
-            }
-            
             try
             {
-                emptyApi.getGenres();
+                if (emptyApi.isHTTPStatusCodeOk())
+                {
+                    Assert.IsNotNull(emptyApi.getGenres());
+                    Assert.IsNotNull(emptyApi.getShows());
+                    return;
+                }
+                Assert.Fail("Denied Connection Exception expected!");
             }
-            catch(Exception)
+            catch(Exceptions.DeniedConnectionException)
             {
                 // test passed
                 return;
             }
-            Assert.Fail("Denied Connection Exception expected!");
         }
 	}
 }
