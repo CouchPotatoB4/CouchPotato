@@ -35,7 +35,9 @@ namespace CouchPotato.Backend.ApiUtil
 
         protected bool isStatusCodeOk()
         {
-            return get().Result.IsSuccessStatusCode;
+            HttpResponseMessage response = get().Result;
+            if (!response.IsSuccessStatusCode) throw new Exceptions.DeniedConnectionException(response.StatusCode);
+            return true;
         }
 
         protected abstract Task<HttpResponseMessage> get(string header);
