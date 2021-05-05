@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CouchPotato.Backend.ShowUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,6 +14,9 @@ namespace CouchPotato.Backend.ApiUtil
     {
         protected HttpClient client = new HttpClient();
         protected string query;
+
+        protected Genre[] genres;
+        protected Show[] shows;
 
         public AbstractApi(string query)
         {

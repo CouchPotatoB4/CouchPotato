@@ -21,9 +21,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
         private static string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
         private static string HEADER_STORAGE = "storage";
 
-        private Genre[] genres;
-        private Show[] shows;
-
         private GenreWithShowsJson[] genreWithShows;
 
         public AniflixApi() : base("https://www2.aniflix.tv") 
@@ -42,7 +39,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return content.ReadAsStringAsync().Result;
         }
 
-        //TODO
         public Image getCoverForShow(int id)
         {
             foreach (Show s in shows)
