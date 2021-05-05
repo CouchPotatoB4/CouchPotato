@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchPotato", "CouchPotato.csproj", "{230D4ECA-64B2-4FA5-A179-136BD6B80A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouchPotato", "CouchPotato.csproj", "{230D4ECA-64B2-4FA5-A179-136BD6B80A20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouchPotatoTests", "..\CouchPotatoTests\CouchPotatoTests.csproj", "{BE8FCC7E-1B6A-4656-BF4E-F10B61961258}"
+	ProjectSection(ProjectDependencies) = postProject
+		{230D4ECA-64B2-4FA5-A179-136BD6B80A20} = {230D4ECA-64B2-4FA5-A179-136BD6B80A20}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{230D4ECA-64B2-4FA5-A179-136BD6B80A20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE8FCC7E-1B6A-4656-BF4E-F10B61961258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE8FCC7E-1B6A-4656-BF4E-F10B61961258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE8FCC7E-1B6A-4656-BF4E-F10B61961258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE8FCC7E-1B6A-4656-BF4E-F10B61961258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

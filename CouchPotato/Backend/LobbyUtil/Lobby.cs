@@ -14,14 +14,14 @@ namespace CouchPotato.Backend.LobbyUtil
     public class Lobby
     {
         private long id;
-        private ISet<User> users = new HashSet<User>();
         private User host;
+        private ISet<User> users = new HashSet<User>();
+        private ISet<Show> selectedShows = new HashSet<Show>();
+        private ISet<Genre> selectedGenres = new HashSet<Genre>();
+        private VotingEvaluation evaluation = new VotingEvaluation();
         private Provider provider;
-        private ISet<Show> shows = new HashSet<Show>();
-        private bool[,] votes;
-        private string[] genres;
         private Mode mode;
-        private int swipes, genresSwipes;
+        private int sSwipes, gSwipes;
 
         public Lobby(User host, long id)
         {
@@ -46,25 +46,27 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public ISet<User> getUser()
         {
-            return users;
+            ISet<User> allUser = new HashSet<User>();
+            allUser.Add(host);
+            foreach (User u in users)
+            {
+                allUser.Add(u);
+            }
+            return allUser;
         }
 
-        public void setConfiguration(Provider? provider, int swipes, int genresCount)
+        public void setConfiguration(Provider? provider, int sSwipes, int gSwipes)
         {
             if (provider != null) this.provider = (Provider)provider;
 
-            if (swipes > 0) this.swipes = swipes;
+            if (sSwipes > 0) this.sSwipes = sSwipes;
 
-            if (genresCount > 0)
-            {
-                genres = new string[genresCount];
-                this.genresSwipes = genresCount;
-            }
+            if (gSwipes > 0) this.gSwipes = gSwipes;
         }
-       
+
         public Image getCoverForShow(int id)
         {
-            foreach (Show show in shows)
+            foreach (Show show in selectedShows)
             {
                 if (show.Id == id) return provider.getApi().getCoverForShow(id);
             }
@@ -76,29 +78,20 @@ namespace CouchPotato.Backend.LobbyUtil
             if (mode == Mode.JOIN)
             {
                 mode = Mode.GENRE_SELECTION;
-                provider.getApi().getGenres();
-                setUserSwipes(genresSwipes);
+                selectedGenres = new HashSet<Genre>(provider.getApi().getGenres());
+                setUserSwipes(gSwipes);
             }
             else if (mode == Mode.GENRE_SELECTION)
             {
-                genres = getGenreResult();
-                provider.getApi().getShows(genres);
                 mode = Mode.FILM_SELECTION;
-                setUserSwipes(swipes);
+                selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
+                selectedShows = new HashSet<Show>(provider.getApi().getShows(selectedGenres));
+                setUserSwipes(sSwipes);
             }
-                
-            createVoteArray();
-        }
-
-        private void createVoteArray()
-        {
-            int width = users.Count + 1;
-            int height = 0;
-
-            if (mode == Mode.FILM_SELECTION) height = shows.Count; 
-            else height = (provider.getApi().getGenres() != null) ? provider.getApi().getGenres().Length : 0;
-
-            votes = new bool[width, height];
+            else if (mode == Mode.FILM_SELECTION)
+            {
+                mode = Mode.OVER;
+            }
         }
 
         private void setUserSwipes(int swipes)
@@ -117,12 +110,24 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public string[] Genre
         {
-            get { return provider.getApi().getGenres(); }
+            get { return getNames((ISet<Votable>)selectedGenres); }
+        }
+
+        private string[] getNames(ISet<Votable> set)
+        {
+            string[] names = new string[set.Count];
+            int i = 0;
+            foreach (Votable v in set)
+            {
+                names[i] = v.Name;
+                i++;
+            }
+            return names;
         }
 
         public ISet<Show> Shows
         {
-            get { return shows; }
+            get { return selectedShows; }
         }
 
         public void loadPage(int page)
@@ -131,7 +136,7 @@ namespace CouchPotato.Backend.LobbyUtil
             {
                 foreach (Show s in provider.getApi().getShows(page))
                 {
-                    shows.Add(s);
+                    selectedShows.Add(s);
                 }
             }
         }
@@ -139,32 +144,29 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public Show getNextShow(int number)
         {
-            if (number >= shows.Count)
+            if (number >= selectedShows.Count)
             {
                 int page = number / ApiConstants.PAGE_SIZE;
                 loadPage(page);
             }
-            return shows.ElementAt(number);
+            return selectedShows.ElementAt(number);
         }
 
 
         public void swipeGenre(long userId, string genre)
-        {          
+        {
             if (mode == Mode.GENRE_SELECTION)
             {
-                if (getUser(userId).swipe())
+                foreach (Genre g in selectedGenres)
                 {
-                    int row = 0;
-                    foreach (string g in provider.getApi().getGenres())
+                    if (g.Name == genre)
                     {
-                        if (g.Equals(genre)) break;
-
-                        row++;
+                        if (getUser(userId).swipe())
+                        {
+                            g.Vote();
+                            break;
+                        }
                     }
-
-                    int column = getUserNumberInSet(userId);
-
-                    votes[column, row] = true;
                 }
             }
         }
@@ -174,13 +176,13 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                foreach (Show s in shows)
+                foreach (Show s in selectedShows)
                 {
                     if (s.Id == showId)
                     {
                         if (getUser(userId).swipe())
                         {
-                            s.vote();
+                            s.Vote();
                             break;
                         }
                     }
@@ -188,69 +190,14 @@ namespace CouchPotato.Backend.LobbyUtil
             }
         }
 
-        private int getUserNumberInSet(long userId)
+        public ISet<Genre> getGenreResults()
         {
-            int column = 0;
-            foreach (User user in users)
-            {
-                if (user.ID == userId) break;
-
-                column++;
-            }
-            return column;
+            return evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
         }
 
-        private string[] getGenreResult()
+        public ISet<Show> getShowResults()
         {
-            IDictionary<int, int> dicitonary = new Dictionary<int, int>();
-
-            string[] allGenres = provider.getApi().getGenres();
-
-            for (int r = 0; r < allGenres.Length; r++)
-            {
-                int count = 0;
-
-                for (int c = 0; c < users.Count + 1; c++)
-                {
-                    if (votes[c, r]) count++;       
-                }
-
-                dicitonary.Add(r, count);
-            }
-
-            KeyValuePair<int, int>[] sortedDictionary = sortDicitonary(dicitonary);
-
-            string[] result = new string[genres.Length];
-
-            for (int i = 0; i < result.Length; i++)
-            {
-                int j = sortedDictionary[i].Key;
-                result[i] = allGenres[j];
-            } 
-
-            return result;
-        }
-
-        private KeyValuePair<int, int>[] sortDicitonary(IDictionary<int, int> dictionary)
-        {
-            KeyValuePair<int, int>[] sorted = dictionary.AsEnumerable().ToArray();
-
-            int offset = 1;
-            for (int j = 0; j < sorted.Length - 1; j++)
-            {
-                for (int i = offset; i < sorted.Length - 1; i++)
-                {
-                    if (sorted[i].Value > sorted[i - 1].Value)
-                    {
-                        var btw = sorted[i - 1];
-                        sorted[i - 1] = sorted[i];
-                        sorted[i] = btw;
-                    }
-                }
-                offset++;
-            }
-
-            return sorted;
+            return evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
         }
     }
 }

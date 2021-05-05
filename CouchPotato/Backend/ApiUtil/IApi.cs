@@ -13,13 +13,13 @@ namespace CouchPotato.Backend.ApiUtil
     {
         Show[] getShows();
 
-        Show[] getShows(string genre);
+        Show[] getShows(Genre genre);
 
-        Show[] getShows(IList<string> genres);
+        Show[] getShows(ISet<Genre> genres);
 
         Show[] getShows(int page);
 
-        string[] getGenres();
+        Genre[] getGenres();
 
         Image getCoverForShow(int id);
     }
