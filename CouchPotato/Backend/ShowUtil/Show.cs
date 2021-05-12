@@ -32,7 +32,7 @@ namespace CouchPotato.Backend.ShowUtil
             set { coverPath = value; }
         }
 
-        private ISet<Genre> genres;
+        private ISet<Genre> genres = new HashSet<Genre>();
 
         public ISet<Genre> Genres
         {
