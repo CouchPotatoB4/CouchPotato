@@ -1,4 +1,5 @@
 ﻿using CouchPotato.Models;
+using CouchPotato.Backend;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

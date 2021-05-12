@@ -49,6 +49,11 @@ namespace CouchPotato.Backend.LobbyUtil
             return users;
         }
 
+        public long ID
+        {
+            get { return id; }
+        }
+
         public void setConfiguration(Provider? provider, int swipes, int genresCount)
         {
             if (provider != null) this.provider = (Provider)provider;

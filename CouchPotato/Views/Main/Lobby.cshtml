@@ -1,0 +1,44 @@
+﻿@model LobbyViewModel
+
+
+<div style="display:block;">
+    <div>
+        <div>
+            <ul class="list-group" id="lobbyMemberList">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+            </ul>
+        </div>
+        <div>
+            <p>confíg</p>
+        </div>
+    </div>
+    <div></div>
+
+
+</div>
+@section scripts{
+    <script type="text/javascript">
+
+        var name = "@Model.name";
+        var lobbyId = @Model.lobbyId;
+        var userId = @Model.userId;
+        var host = @Model.host.ToString().ToLower();
+
+
+        $(document).ready(function () {
+            LoadLobbymembers();
+            LoadConfig();
+        })
+
+        function LoadLobbymembers() {
+
+        }
+        function LoadConfig() {
+
+        }
+    </script>
+}
