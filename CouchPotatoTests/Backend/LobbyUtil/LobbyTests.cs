@@ -1,10 +1,12 @@
-﻿using CouchPotato.Backend.UserUtil;
+﻿using CouchPotato.Backend.ApiUtil;
+using CouchPotato.Backend.UserUtil;
+using CouchPotatoTests.PseudoClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace CouchPotato.Backend.LobbyUtil.Tests
 {
-	[TestClass()]
+    [TestClass()]
 	public class LobbyTests
 	{
 		[TestMethod()]
@@ -44,16 +46,48 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 		}
 
 		[TestMethod()]
-		public void LobbyTest()
+		public void LobbyRuntroughTest()
 		{
-			Lobby lobby = new Lobby(null, 0);
-			Assert.IsNotNull(lobby);
+			User host = UserFactory.build("User");
+			Lobby lobby = LobbyFactory.build(host);
+			PseudoApi api = new PseudoApi();
+			lobby.setConfiguration(api, 5, 5);
+			Assert.AreEqual(Mode.GENRE_SELECTION, lobby.nextMode()); // New Mode: Select Genre
+
+			for (int i = 0; i < 5; i++)
+			{
+				int savedVoteCount = lobby.Genres[i].Votes;
+				lobby.swipeGenre(host.ID, lobby.Genres[i].Name);
+				Assert.AreNotEqual(savedVoteCount, lobby.Genres[i].Votes);
+			}
+			int genreVoteCount = lobby.Genres[0].Votes;
+			lobby.swipeGenre(host.ID, lobby.Genres[0].Name);
+			Assert.AreEqual(genreVoteCount, lobby.Genres[0].Votes);
+
+			int oldSelectedGenreCount = lobby.Genres.Length;
+			Assert.AreEqual(Mode.FILM_SELECTION, lobby.nextMode()); // New Mode: Film Selection
+			Assert.AreEqual(oldSelectedGenreCount, lobby.Genres.Length);
+
+            for (int i = 0; i < 5; i++)
+            {
+                int savedVoteCount = lobby.Shows[i].Votes;
+				lobby.swipeFilm(host.ID, lobby.Shows[i].Id);
+				Assert.AreNotEqual(savedVoteCount, lobby.Shows[i].Votes);
+            }
+			int showVoteCount = lobby.Shows[0].Votes;
+			lobby.swipeFilm(host.ID, lobby.Shows[0].Id);
+			Assert.AreEqual(showVoteCount, lobby.Shows[0].Votes);
+
+			int oldSelectedShowCount = lobby.Shows.Length;
+			Assert.AreEqual(Mode.OVER, lobby.nextMode()); // New Mode: Over
+			Assert.AreEqual(oldSelectedShowCount, lobby.Shows.Length);
 		}
 
 		[TestMethod()]
-		public void setConfigurationTest()
+		public void SetConfigurationTest()
 		{
-			LobbyFactory.build(null).setConfiguration(ApiUtil.Provider.Aniflix, 5, 5);
+			LobbyFactory.build(null).setConfiguration(Provider.Aniflix.getApi(), 5, 5);
+			LobbyFactory.build(null).setConfiguration(new PseudoApi(), 5, 5);
 			LobbyFactory.build(null).setConfiguration(null, -1, -1);
 		}
 	}

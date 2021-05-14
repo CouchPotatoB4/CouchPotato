@@ -55,9 +55,9 @@ namespace CouchPotato.Backend.LobbyUtil
             return allUser;
         }
 
-        public void setConfiguration(IApi provider, int sSwipes, int gSwipes)
+        public void setConfiguration(IApi api, int sSwipes, int gSwipes)
         {
-            if (provider != null) this.providerApi = provider;
+            if (api != null) this.providerApi = api;
 
             if (sSwipes > 0) this.sSwipes = sSwipes;
 
@@ -73,7 +73,7 @@ namespace CouchPotato.Backend.LobbyUtil
             return null;
         }
 
-        public void nextMode()
+        public Mode nextMode()
         {
             if (mode == Mode.JOIN)
             {
@@ -92,6 +92,7 @@ namespace CouchPotato.Backend.LobbyUtil
             {
                 mode = Mode.OVER;
             }
+            return mode;
         }
 
         private void setUserSwipes(int swipes)
@@ -108,9 +109,9 @@ namespace CouchPotato.Backend.LobbyUtil
             return mode == Mode.JOIN;
         }
 
-        public string[] Genre
+        public Genre[] Genres
         {
-            get { return getNames((ISet<Votable>)selectedGenres); }
+            get { return selectedGenres.ToArray<Genre>(); }
         }
 
         private string[] getNames(ISet<Votable> set)
@@ -125,9 +126,9 @@ namespace CouchPotato.Backend.LobbyUtil
             return names;
         }
 
-        public ISet<Show> Shows
+        public Show[] Shows
         {
-            get { return selectedShows; }
+            get { return selectedShows.ToArray<Show>(); }
         }
 
         public void loadPage(int page)
