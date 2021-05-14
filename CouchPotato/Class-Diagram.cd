@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CouchPotato.Backend.ApiUtil.Aniflix.AniflixApi">
+    <Position X="17.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAIIAAABAAAQAARCAAAAAAACAAIAAQAAAA=</HashCode>
+      <FileName>Backend\ApiUtil\Aniflix\AniflixApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CouchPotato.Backend.ApiUtil.Aniflix.ShowJson">
+    <Position X="19.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAgIEACAAAAgSAMADAAAACAAAAgAgA=</HashCode>
+      <FileName>Backend\ApiUtil\Aniflix\Jsons.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ApiUtil.Aniflix.GenreWithShowsJson">
+    <Position X="19.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAACAEACAAAACAAAAAAgA=</HashCode>
+      <FileName>Backend\ApiUtil\Aniflix\Jsons.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ApiUtil.AbstractApi">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAUAACAAAAAIAAAAAIBAAAAAA=</HashCode>
+      <FileName>Backend\ApiUtil\AbstractApi.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ApiUtil.ProviderMethods">
+    <Position X="13.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAEAAAAAAAAAAAAAAAAAAAAAAgAAAACAAAAAAA=</HashCode>
+      <FileName>Backend\ApiUtil\Provider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.LobbyUtil.Lobby">
+    <Position X="8.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IABAAAQEQCAIAACIAAIAAAABCAAQIAAACggAIDgAIoA=</HashCode>
+      <FileName>Backend\LobbyUtil\Lobby.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.LobbyUtil.LobbyFactory">
+    <Position X="6.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Backend\LobbyUtil\LobbyFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.LobbyUtil.VotingEvaluation" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAABAAAAAAAI=</HashCode>
+      <FileName>Backend\LobbyUtil\VotingEvaluation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CouchPotato.Backend.ShowUtil.Genre">
+    <Position X="12.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Backend\ShowUtil\Genre.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ShowUtil.Show">
+    <Position X="14.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAQAAAAgAAAAIAIAAAACAAAAAAAAAAQAAAAAAgA=</HashCode>
+      <FileName>Backend\ShowUtil\Show.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ShowUtil.Votable">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAhAAA=</HashCode>
+      <FileName>Backend\ShowUtil\Votable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.ShowUtil.VotableFactory">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Backend\ShowUtil\VotableFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.UserUtil.User">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAACAgAAAAAAAAAQAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Backend\UserUtil\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.UserUtil.UserFactory">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Backend\UserUtil\UserFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.Exceptions.ApiChangedException" Collapsed="true">
+    <Position X="18.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Backend\Exceptions\ApiChangedException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.Exceptions.DeniedConnectionException" Collapsed="true">
+    <Position X="17" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAA=</HashCode>
+      <FileName>Backend\Exceptions\DeniedConnectionException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CouchPotato.Backend.Control" Collapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AApAAAAQgAAIAAACAAAAAAAAAAAAAAgASAAAAAAABAA=</HashCode>
+      <FileName>Backend\Control.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="CouchPotato.Backend.ApiUtil.Provider">
+    <Position X="13.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAACAAIAAAAAAA=</HashCode>
+      <FileName>Backend\ApiUtil\Provider.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CouchPotato.Backend.LobbyUtil.Mode">
+    <Position X="8.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAIAAEAAAA=</HashCode>
+      <FileName>Backend\LobbyUtil\Mode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CouchPotato.Backend.LobbyUtil.EvaluationType">
+    <Position X="4.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Backend\LobbyUtil\VotingEvaluation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
