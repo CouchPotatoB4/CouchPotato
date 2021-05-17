@@ -66,9 +66,10 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 				votedGenres.Add(genre);
 			}
 
-			int genreVoteCount = lobby.Genres[9].Votes;
-			lobby.swipeGenre(host.ID, lobby.Genres[9].Name);
-			Assert.AreEqual(genreVoteCount, lobby.Genres[9].Votes); // Vote count should not modify with swiping after reaching max swipe count 
+            Genre invalidVotedGenre = lobby.Genres[9];
+            int genreVoteCount = invalidVotedGenre.Votes;
+			lobby.swipeGenre(host.ID, invalidVotedGenre.Name);
+            Assert.AreEqual(genreVoteCount, invalidVotedGenre.Votes); // Vote count should not modify with swiping after reaching max swipe count 
 
 			int oldSelectedGenreCount = lobby.Genres.Length;
 			Assert.AreEqual(Mode.FILM_SELECTION, lobby.nextMode()); // New Mode: Film Selection
@@ -83,9 +84,11 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
                 Assert.AreNotEqual(savedVoteCount, show.Votes); // Vote count should be updated & not equal to old count
 				votedShows.Add(show);
             }
-			int showVoteCount = lobby.getNextShow(9).Votes;
-			lobby.swipeFilm(host.ID, lobby.getNextShow(9).Id);
-			Assert.AreEqual(showVoteCount, lobby.getNextShow(9).Votes); // Vote count should not modify with swiping after reaching max swipe count 
+
+            Show invalidVotedShow = lobby.getNextShow(9);
+            int showVoteCount = invalidVotedShow.Votes;
+			lobby.swipeFilm(host.ID, invalidVotedShow.Id);
+            Assert.AreEqual(showVoteCount, invalidVotedShow.Votes); // Vote count should not modify with swiping after reaching max swipe count 
 
 			int oldSelectedShowCount = lobby.Shows.Length;
 			Assert.AreEqual(Mode.OVER, lobby.nextMode()); // New Mode: Over
