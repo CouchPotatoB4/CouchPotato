@@ -1,0 +1,25 @@
+﻿
+@model VotingViewModel
+Voting has started
+
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        var name = "@Model.name";
+        var lobbyid = @Model.lobbyid;
+        var userid = @Model.userid;
+        var host = @Model.host.ToString().ToLower();
+
+        var intervalId;
+
+        $(document).ready(function () {
+
+            intervalId = setInterval(function () {
+
+            }, 5000);
+        });
+
+    </script>
+}

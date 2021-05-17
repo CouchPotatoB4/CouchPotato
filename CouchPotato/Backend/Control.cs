@@ -14,11 +14,11 @@ using System.Net.Http;
 
 namespace CouchPotato.Backend
 {
-    public class Control
+    public static class Control
     {
-        private IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
+        private static IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
 
-        public HttpResponseMessage post(string request)
+        public static HttpResponseMessage post(string request)
         {
             //TODO
             try
@@ -41,13 +41,25 @@ namespace CouchPotato.Backend
             return null;
         }
 
-        //PRIVATE
-        public Lobby createLobby(User host)
+        public static Lobby createLobby(User host)
         {
-            return LobbyFactory.build(host);
+            Lobby lobby = LobbyFactory.build(host);
+            lobbies.Add(lobby.ID.ToString() , lobby);
+            return lobby;
         }
 
-        private bool joinLobby(User user, Lobby lobby)
+        public static Lobby getLobby(String id)
+        {
+            if (lobbies.ContainsKey(id))
+            {
+                Lobby lobby;
+                lobbies.TryGetValue(id, out lobby);
+                return lobby;
+            }
+            return null;
+        }
+
+        public static bool joinLobby(User user, Lobby lobby)
         {
             if (lobby.isOpen())
             {
@@ -56,7 +68,7 @@ namespace CouchPotato.Backend
             return lobby.isOpen();
         }
 
-        private void startSelection(Lobby lobby)
+        private static void startSelection(Lobby lobby)
         {
             lobby.nextMode();
         }
@@ -66,7 +78,7 @@ namespace CouchPotato.Backend
             return lobby.Genres;
         }
 
-        private void swipeGenre(Lobby lobby, long userId, string genre)
+        private static void swipeGenre(Lobby lobby, long userId, string genre)
         {
             lobby.swipeGenre(userId, genre);
         }
@@ -76,20 +88,21 @@ namespace CouchPotato.Backend
             return lobby.Shows;
         }
 
-        private void swipeFilm(Lobby lobby, long userId, int showId)
+        private static void swipeFilm(Lobby lobby, long userId, int showId)
         {
             lobby.swipeFilm(userId, showId);
         }
 
-        private Image getCoverForShow(Lobby lobby, int showId)
+        private static Image getCoverForShow(Lobby lobby, int showId)
         {
             return lobby.getCoverForShow(showId);
         }
 
 
-        private void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
+        private static void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
         {
             lobby.setConfiguration(provider.getApi(), swipes, genresCount);
         }
+
     }
 }
