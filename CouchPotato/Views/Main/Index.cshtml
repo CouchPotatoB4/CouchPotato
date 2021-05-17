@@ -40,7 +40,7 @@
             if (name != "" && lobbyid != "") {
                 $.get("/Main/joinLobby", { name: name, lobbyid: lobbyid })
                     .done(function (data) {
-                        window.open("/Main/Lobby?name=" + name + "&userId=" + data.userid + "&lobbyId=" + data.lobbyid + "&host=false", "_self");
+                        window.open("/Main/Lobby?name=" + name + "&userid=" + data.userid + "&lobbyid=" + data.lobbyid + "&host=false", "_self");
                     })
                     .fail(function (data) {
                         alert(data);
@@ -53,7 +53,7 @@
             if (name != "") {
                 $.get("/Main/createLobby", { name: name })
                     .done(function (data) {
-                        window.open("/Main/Lobby?name=" + name + "&userId=" + data.userid + "&lobbyId=" + data.lobbyid+ "&host=true", "_self");
+                        window.open("/Main/Lobby?name=" + name + "&userid=" + data.userid + "&lobbyid=" + data.lobbyid+ "&host=true", "_self");
                     })
                     .fail(function (data) {
                         alert(data);

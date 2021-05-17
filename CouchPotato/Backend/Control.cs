@@ -41,7 +41,6 @@ namespace CouchPotato.Backend
             return null;
         }
 
-        //PRIVATE
         public static Lobby createLobby(User host)
         {
             Lobby lobby = LobbyFactory.build(host);

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CouchPotato.Backend;
 using CouchPotato.Backend.UserUtil;
 using CouchPotato.Backend.LobbyUtil;
+using CouchPotato.Backend.ApiUtil;
 using CouchPotato.Models;
 
 
@@ -25,16 +26,21 @@ namespace CouchPotato.Controllers
         {
             return View();
         }
-        public IActionResult Name()
+        public IActionResult Voting(string name, long userid, long lobbyid, Boolean host)
         {
-            return View();
+            VotingViewModel model = new VotingViewModel();
+            model.name = name;
+            model.userid = userid;
+            model.lobbyid = lobbyid;
+            model.host = host;
+            return View(model);
         }
-        public IActionResult Lobby(string name, long userId,long lobbyId, Boolean host)
+        public IActionResult Lobby(string name, long userid,long lobbyid, Boolean host)
         {
             LobbyViewModel model = new LobbyViewModel();
             model.name = name;
-            model.userId = userId;
-            model.lobbyId = lobbyId;
+            model.userid = userid;
+            model.lobbyid = lobbyid;
             model.host = host;
             return View(model);
         }
@@ -68,9 +74,68 @@ namespace CouchPotato.Controllers
             Dictionary<string, long> returnValue = new Dictionary<string, long>();
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
+
+            setConfig(lobby.ID.ToString() , "Aniflix", 10, 5);// set default config
+
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
             return returnValue;
+        }
+
+        public List<String> getMembers(string lobbyid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            ISet<User> users = lobby.getUser();
+            User host = lobby.getHost();
+
+            List<String> returnValue = new List<string>();
+            returnValue.Add(host.Name);
+            foreach (var user in users)
+            {
+                returnValue.Add(user.Name);
+            }
+
+            return returnValue;
+        }
+
+        public void setConfig(string lobbyid, String provider,int swipes, int genresCount)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);//TODO
+            Provider p;
+            switch (provider)
+            {   
+                case "Netflix":
+                    p = Provider.Netflix;
+                    break;
+                case "AmazonPrime":
+                    p = Provider.AmazonPrime;
+                    break;
+                case "Aniflix":
+                    p = Provider.Aniflix;
+                    break;
+                default:
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    message.Content = new StringContent("Invalid Provider");
+                    throw new HttpResponseException(message);
+                    break;
+            }
+            lobby.setConfiguration(p, swipes, genresCount);
+        }
+
+        public void startVoting(string lobbyid, long userid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            if (lobby.getHost().ID.Equals(userid))
+            {
+                lobby.nextMode();
+            }
+
+        }
+
+        public Mode getMode (string lobbyid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            return lobby.GetMode();
         }
     }
 }

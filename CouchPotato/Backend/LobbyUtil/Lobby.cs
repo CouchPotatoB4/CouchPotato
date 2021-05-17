@@ -44,9 +44,19 @@ namespace CouchPotato.Backend.LobbyUtil
             return null;
         }
 
+        public Mode GetMode()
+        {
+            return mode;
+        }
+
         public ISet<User> getUser()
         {
             return users;
+        }
+
+        public User getHost()
+        {
+            return host;
         }
 
         public long ID
@@ -66,7 +76,7 @@ namespace CouchPotato.Backend.LobbyUtil
                 this.genresSwipes = genresCount;
             }
         }
-       
+
         public Image getCoverForShow(int id)
         {
             foreach (Show show in shows)

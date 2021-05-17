@@ -2,7 +2,7 @@
 
 namespace CouchPotato.Models
 {
-    public class LobbyViewModel
+    public class VotingViewModel
     {
         public string name { get; set; }
         public long userid { get; set; }
