@@ -44,6 +44,11 @@ namespace CouchPotato.Backend.LobbyUtil
             return null;
         }
 
+        public Mode GetMode()
+        {
+            return mode;
+        }
+
         public ISet<User> getUser()
         {
             ISet<User> allUser = new HashSet<User>();
