@@ -20,10 +20,15 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 			int oldVotesCount = showFromConstructor.Votes;
 			showFromConstructor.Vote();
 			Assert.AreNotEqual(oldVotesCount, showFromConstructor.Votes);
+
+            Genre genre = VotableFactory.buildGenre("TestGenre");
+            showFromFactory.AddGenre(genre);
+			Assert.IsTrue(showFromFactory.Genres.Contains(genre));
+
 		}
 
 		[TestMethod()]
-		public void ShowTest2()
+		public void DuplicateIdTest()
 		{
 			Show show1 = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");
 			try

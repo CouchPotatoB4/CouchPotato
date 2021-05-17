@@ -19,7 +19,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private ISet<Show> selectedShows = new HashSet<Show>();
         private ISet<Genre> selectedGenres = new HashSet<Genre>();
         private VotingEvaluation evaluation = new VotingEvaluation();
-        private Provider provider;
+        private IApi providerApi;
         private Mode mode;
         private int sSwipes, gSwipes;
 
@@ -55,9 +55,9 @@ namespace CouchPotato.Backend.LobbyUtil
             return allUser;
         }
 
-        public void setConfiguration(Provider? provider, int sSwipes, int gSwipes)
+        public void setConfiguration(IApi api, int sSwipes, int gSwipes)
         {
-            if (provider != null) this.provider = (Provider)provider;
+            if (api != null) this.providerApi = api;
 
             if (sSwipes > 0) this.sSwipes = sSwipes;
 
@@ -68,30 +68,34 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (Show show in selectedShows)
             {
-                if (show.Id == id) return provider.getApi().getCoverForShow(id);
+                if (show.Id == id) return providerApi.getCoverForShow(id);
             }
             return null;
         }
 
-        public void nextMode()
+        public Mode nextMode()
         {
             if (mode == Mode.JOIN)
             {
                 mode = Mode.GENRE_SELECTION;
-                selectedGenres = new HashSet<Genre>(provider.getApi().getGenres());
+                selectedGenres = new HashSet<Genre>(providerApi.getGenres());
                 setUserSwipes(gSwipes);
             }
             else if (mode == Mode.GENRE_SELECTION)
             {
                 mode = Mode.FILM_SELECTION;
                 selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
-                selectedShows = new HashSet<Show>(provider.getApi().getShows(selectedGenres));
+                
+                loadPage(0);
+                selectedShows = new HashSet<Show>(providerApi.getShows(selectedGenres));
                 setUserSwipes(sSwipes);
             }
             else if (mode == Mode.FILM_SELECTION)
             {
+                selectedShows = evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
                 mode = Mode.OVER;
             }
+            return mode;
         }
 
         private void setUserSwipes(int swipes)
@@ -108,9 +112,9 @@ namespace CouchPotato.Backend.LobbyUtil
             return mode == Mode.JOIN;
         }
 
-        public string[] Genre
+        public Genre[] Genres
         {
-            get { return getNames((ISet<Votable>)selectedGenres); }
+            get { return selectedGenres.ToArray<Genre>(); }
         }
 
         private string[] getNames(ISet<Votable> set)
@@ -125,16 +129,19 @@ namespace CouchPotato.Backend.LobbyUtil
             return names;
         }
 
-        public ISet<Show> Shows
+        public Show[] Shows
         {
-            get { return selectedShows; }
+            get 
+            {
+                return selectedShows.ToArray<Show>(); 
+            }
         }
 
         public void loadPage(int page)
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                foreach (Show s in provider.getApi().getShows(page))
+                foreach (Show s in providerApi.getShows(page))
                 {
                     selectedShows.Add(s);
                 }

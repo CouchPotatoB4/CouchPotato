@@ -61,9 +61,9 @@ namespace CouchPotato.Backend
             lobby.nextMode();
         }
 
-        private string[] getGenre(Lobby lobby)
+        private Genre[] getGenre(Lobby lobby)
         {
-            return lobby.Genre;
+            return lobby.Genres;
         }
 
         private void swipeGenre(Lobby lobby, long userId, string genre)
@@ -71,7 +71,7 @@ namespace CouchPotato.Backend
             lobby.swipeGenre(userId, genre);
         }
 
-        private ISet<Show> getFilms(Lobby lobby)
+        private Show[] getFilms(Lobby lobby)
         {
             return lobby.Shows;
         }
@@ -89,7 +89,7 @@ namespace CouchPotato.Backend
 
         private void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
         {
-            lobby.setConfiguration(provider, swipes, genresCount);
+            lobby.setConfiguration(provider.getApi(), swipes, genresCount);
         }
     }
 }

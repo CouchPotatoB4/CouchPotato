@@ -58,9 +58,9 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
                 }
                 Assert.Fail("Denied Connection Exception expected!");
             }
-            catch(Exceptions.DeniedConnectionException)
+            catch(Exceptions.DeniedConnectionException e)
             {
-                // test passed
+                Assert.Fail("No Connection to API - Request Answer: " + e.Message);
                 return;
             }
         }
