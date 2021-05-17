@@ -59,13 +59,24 @@ namespace CouchPotatoTests.PseudoClasses
 
         public Show[] getShows(ISet<Genre> genres)
         {
-            throw new NotImplementedException();
+            List<Show> filteredShows = new List<Show>();
+            foreach (var show in base.shows)
+            {
+                if (show.Genres.Contains(genres.GetEnumerator().Current))
+                {
+                    filteredShows.Add(show);
+                }
+            }
+            return filteredShows.ToArray();
         }
 
         public Show[] getShows(int page)
         {
             Show[] resultArray = new Show[10];
-            base.shows.CopyTo(resultArray, 0);
+            for (int i = 0; i < 10; i++)
+            {
+                resultArray[i] = base.shows[i];
+            }
             return resultArray;
         }
 

@@ -22,22 +22,30 @@ namespace CouchPotato.Backend.LobbyUtil
 
         internal ISet<Genre> evaluateGenre(ISet<Genre> genres)
         {
-            return (ISet<Genre>)evaluate((ISet<Votable>)genres, EvaluationType.ALL);
+            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
+            ISet<Genre> sorted = new SortedSet<Genre>(genres, this);
+            return sorted;
         }
 
         internal ISet<Genre> evaluateGenre(ISet<Genre> genres, EvaluationType type)
-        {
-            return (ISet<Genre>)evaluate((ISet<Votable>)genres, type);
+        {   
+            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
+            ISet<Genre> sorted = new SortedSet<Genre>(genres, this);
+            return sorted;
         }
 
         internal ISet<Show> evaluateShow(ISet<Show> shows)
         {
-            return (ISet<Show>)evaluate((ISet<Votable>)shows, EvaluationType.ALL);
+            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
+            ISet<Show> sorted = new SortedSet<Show>(shows, this);
+            return sorted;
         }
 
         internal ISet<Show> evaluateShow(ISet<Show> shows, EvaluationType type)
         {
-            return (ISet<Show>)evaluate((ISet<Votable>)shows, type);
+            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
+            ISet<Show> sorted = new SortedSet<Show>(shows, this);
+            return sorted;
         }
 
         internal ISet<Votable> evaluate(ISet<Votable> set, EvaluationType type)

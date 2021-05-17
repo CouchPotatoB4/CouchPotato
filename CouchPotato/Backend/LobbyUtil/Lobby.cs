@@ -85,11 +85,14 @@ namespace CouchPotato.Backend.LobbyUtil
             {
                 mode = Mode.FILM_SELECTION;
                 selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
+                
+                loadPage(0);
                 selectedShows = new HashSet<Show>(providerApi.getShows(selectedGenres));
                 setUserSwipes(sSwipes);
             }
             else if (mode == Mode.FILM_SELECTION)
             {
+                selectedShows = evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
                 mode = Mode.OVER;
             }
             return mode;
@@ -128,7 +131,10 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public Show[] Shows
         {
-            get { return selectedShows.ToArray<Show>(); }
+            get 
+            {
+                return selectedShows.ToArray<Show>(); 
+            }
         }
 
         public void loadPage(int page)
