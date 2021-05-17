@@ -1,0 +1,65 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is the index page</p>
+</div>
+    
+<div>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">name</span>
+        <input id="inputName" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+</div>
+
+    <div style="display: flex; flex-direction: row; justify-content: space-evenly; align-items:baseline;">
+        <div style="display: flex; flex-direction: column">
+            <button type="button" class="btn btn-warning" id="btnCreateLobby">Create new Lobby</button>
+        </div>
+        <div style="display: flex; flex-direction: column">
+            <button type="button" class="btn btn-warning" id="btnJoinLobby">Join Lobby</button>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">ID</span>
+                <input id="lobbyid" type="text" class="form-control" placeholder="Lobby Id" aria-label="Lobby Id" aria-describedby="basic-addon1" id="inputLobbyId">
+            </div>
+        </div>
+    </div>
+
+@section scripts{ 
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#btnCreateLobby").click(function () {
+                createLobbyClick();
+            });
+            $("#btnJoinLobby").click(function () {
+                joinLobbyClick();
+            });
+        })
+        function joinLobbyClick() {
+            var name = $("#inputName").val();
+            var lobbyid = $("#lobbyid").val();
+            if (name != "" && lobbyid != "") {
+                $.get("/Main/joinLobby", { name: name, lobbyid: lobbyid })
+                    .done(function (data) {
+                        window.open("/Main/Lobby?name=" + name + "&userid=" + data.userid + "&lobbyid=" + data.lobbyid + "&host=false", "_self");
+                    })
+                    .fail(function (data) {
+                        alert(data);
+                    })
+            }
+
+        }
+        function createLobbyClick() {
+            name = $("#inputName").val();
+            if (name != "") {
+                $.get("/Main/createLobby", { name: name })
+                    .done(function (data) {
+                        window.open("/Main/Lobby?name=" + name + "&userid=" + data.userid + "&lobbyid=" + data.lobbyid+ "&host=true", "_self");
+                    })
+                    .fail(function (data) {
+                        alert(data);
+                    })
+            }
+        }
+
+    </script>
+}
