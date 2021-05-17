@@ -14,7 +14,7 @@ namespace CouchPotato.Backend.ApiUtil
         Netflix, AmazonPrime, Aniflix
     }
 
-    static class ProviderMethods
+    public static class ProviderMethods
     {
         //TODO
         private static IApi NETFLIX;

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CouchPotato.Backend.ApiUtil;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CouchPotato.Backend.ApiUtil.Exceptions
+namespace CouchPotato.Backend.Exceptions
 {
     public class ApiChangedException : Exception
     {
