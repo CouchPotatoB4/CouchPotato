@@ -60,6 +60,11 @@ namespace CouchPotato.Backend.LobbyUtil
             return allUser;
         }
 
+        public User getHost()
+        {
+            return host;
+        }
+
         public void setConfiguration(IApi api, int sSwipes, int gSwipes)
         {
             if (api != null) this.providerApi = api;
@@ -67,6 +72,21 @@ namespace CouchPotato.Backend.LobbyUtil
             if (sSwipes > 0) this.sSwipes = sSwipes;
 
             if (gSwipes > 0) this.gSwipes = gSwipes;
+        }
+
+        public int GenreSwipes
+        {
+            get { return gSwipes; }
+        }
+
+        public int Swipes
+        {
+            get { return sSwipes; }
+        }
+
+        public long ID
+        {
+            get { return id; }
         }
 
         public Image getCoverForShow(int id)
@@ -180,8 +200,29 @@ namespace CouchPotato.Backend.LobbyUtil
                         }
                     }
                 }
+                if (checkSwipesLeft())
+                {
+                    nextMode();
+                }
             }
         }
+        private Boolean checkSwipesLeft()
+        {
+            Boolean noSwipesLeft = true;
+            foreach (User user in users)
+            {
+                if (user.Swipes > 0)
+                {
+                    noSwipesLeft = false;
+                }
+            }
+            if (host.Swipes > 0)
+            {
+                noSwipesLeft = false;
+            }
+            return noSwipesLeft;
+        }
+
 
 
         public void swipeFilm(long userId, int showId)

@@ -18,29 +18,6 @@ namespace CouchPotato.Backend
     {
         private static IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
 
-        public static HttpResponseMessage post(string request)
-        {
-            //TODO
-            try
-            {
-
-            }
-            catch (ApiChangedException e)
-            {
-                Console.WriteLine(e);
-                switch (e.Provider)
-                {
-                    case Provider.Aniflix:
-                        break;
-                    case Provider.Netflix:
-                        break;
-                    case Provider.AmazonPrime:
-                        break;
-                }
-            }
-            return null;
-        }
-
         public static Lobby createLobby(User host)
         {
             Lobby lobby = LobbyFactory.build(host);
@@ -73,7 +50,7 @@ namespace CouchPotato.Backend
             lobby.nextMode();
         }
 
-        private Genre[] getGenre(Lobby lobby)
+        private static Genre[] getGenre(Lobby lobby)
         {
             return lobby.Genres;
         }
@@ -83,7 +60,7 @@ namespace CouchPotato.Backend
             lobby.swipeGenre(userId, genre);
         }
 
-        private Show[] getFilms(Lobby lobby)
+        private static Show[] getFilms(Lobby lobby)
         {
             return lobby.Shows;
         }
