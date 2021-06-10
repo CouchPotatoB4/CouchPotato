@@ -71,12 +71,12 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public int GenreSwipes
         {
-            get { return genresSwipes; }
+            get { return gSwipes; }
         }
 
         public int Swipes
         {
-            get { return swipes; }
+            get { return sSwipes; }
         }
 
         public Image getCoverForShow(int id)
@@ -190,8 +190,29 @@ namespace CouchPotato.Backend.LobbyUtil
                         }
                     }
                 }
+                if (checkSwipesLeft())
+                {
+                    nextMode();
+                }
             }
         }
+        private Boolean checkSwipesLeft()
+        {
+            Boolean noSwipesLeft = true;
+            foreach (User user in users)
+            {
+                if (user.Swipes > 0)
+                {
+                    noSwipesLeft = false;
+                }
+            }
+            if (host.Swipes > 0)
+            {
+                noSwipesLeft = false;
+            }
+            return noSwipesLeft;
+        }
+
 
 
         public void swipeFilm(long userId, int showId)
