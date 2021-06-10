@@ -125,17 +125,17 @@ namespace CouchPotato.Controllers
         public void setConfig(string lobbyid, String provider,int swipes, int genresCount)
         {
             Lobby lobby = Control.getLobby(lobbyid);//TODO
-            Provider p;
+            IApi api;
             switch (provider)
             {   
                 case "Netflix":
-                    p = Provider.Netflix;
+                    api = Provider.Netflix.getApi();
                     break;
                 case "AmazonPrime":
-                    p = Provider.AmazonPrime;
+                    api = Provider.AmazonPrime.getApi();
                     break;
                 case "Aniflix":
-                    p = Provider.Aniflix;
+                    api = Provider.Aniflix.getApi();
                     break;
                 default:
                     HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -143,7 +143,7 @@ namespace CouchPotato.Controllers
                     throw new HttpResponseException(message);
                     break;
             }
-            lobby.setConfiguration(p, swipes, genresCount);
+            lobby.setConfiguration(api, swipes, genresCount);
         }
 
         public void startVoting(string lobbyid, long userid)

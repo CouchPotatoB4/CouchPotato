@@ -60,6 +60,11 @@ namespace CouchPotato.Backend.LobbyUtil
             return allUser;
         }
 
+        public User getHost()
+        {
+            return host;
+        }
+
         public void setConfiguration(IApi api, int sSwipes, int gSwipes)
         {
             if (api != null) this.providerApi = api;
@@ -77,6 +82,11 @@ namespace CouchPotato.Backend.LobbyUtil
         public int Swipes
         {
             get { return sSwipes; }
+        }
+
+        public long ID
+        {
+            get { return id; }
         }
 
         public Image getCoverForShow(int id)

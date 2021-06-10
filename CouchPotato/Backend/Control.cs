@@ -50,7 +50,7 @@ namespace CouchPotato.Backend
             lobby.nextMode();
         }
 
-        private Genre[] getGenre(Lobby lobby)
+        private static Genre[] getGenre(Lobby lobby)
         {
             return lobby.Genres;
         }
@@ -60,7 +60,7 @@ namespace CouchPotato.Backend
             lobby.swipeGenre(userId, genre);
         }
 
-        private Show[] getFilms(Lobby lobby)
+        private static Show[] getFilms(Lobby lobby)
         {
             return lobby.Shows;
         }
