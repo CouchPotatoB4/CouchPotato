@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CouchPotatoTests.PseudoClasses
+namespace CouchPotato.Backend.ApiUtil
 {
-    class PseudoApi : AbstractApi, IApi
+    public class PseudoApi : AbstractApi, IApi
     {
 
         public PseudoApi() : base("")
@@ -47,7 +47,7 @@ namespace CouchPotatoTests.PseudoClasses
         public Show[] getShows(Genre genre)
         {
             List<Show> filteredShows = new List<Show>();
-            foreach (var show in base.shows)
+            foreach (var show in shows)
             {
                 if (show.Genres.Contains(genre))
                 {
@@ -60,7 +60,7 @@ namespace CouchPotatoTests.PseudoClasses
         public Show[] getShows(ISet<Genre> genres)
         {
             List<Show> filteredShows = new List<Show>();
-            foreach (var show in base.shows)
+            foreach (var show in shows)
             {
                 if (show.Genres.Contains(genres.GetEnumerator().Current))
                 {
@@ -75,7 +75,7 @@ namespace CouchPotatoTests.PseudoClasses
             Show[] resultArray = new Show[10];
             for (int i = 0; i < 10; i++)
             {
-                resultArray[i] = base.shows[i];
+                resultArray[i] = shows[i];
             }
             return resultArray;
         }
