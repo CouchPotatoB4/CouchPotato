@@ -8,6 +8,6 @@ namespace CouchPotato.Backend.LobbyUtil
 {
     public enum Mode
     {
-        JOIN, GENRE_SELECTION, FILM_SELECTION
+        JOIN, GENRE_SELECTION, FILM_SELECTION, OVER
     }
 }
