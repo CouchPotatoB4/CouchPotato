@@ -51,7 +51,10 @@
         function checkLobbyMode() {
             $.get("/Main/getMode", { lobbyid: lobbyid })
                 .done(function (data) {
-                    if (data != 0) {
+                    if (data == 1) {
+                        window.open("/Main/GenreVoting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                    }
+                    if (data == 2) {
                         window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
                     }
                 })

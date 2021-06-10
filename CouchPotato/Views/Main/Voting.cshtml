@@ -1,7 +1,7 @@
 ﻿
 @model VotingViewModel
-Voting has started
 
+<div id="cardContainer"></div>
 
 
 @section scripts{
@@ -16,8 +16,23 @@ Voting has started
 
         $(document).ready(function () {
 
+            $("#cardContainer").load("@Url.Action("get","Main")", { 'id' : '123' }, function (response, status, xhr)
+            {
+            if (status == "error")
+            {
+                alert("An error occurred while loading the results.");
+            }
+        });
             intervalId = setInterval(function () {
-
+                $.get("/Main/getMode", { lobbyid: lobbyid })
+                    .done(function (data) {
+                        if (data == 2) {
+                            window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                        }
+                    })
+                    .fail(function (data) {
+                        alert("Error while trying to get Lobby mode");
+                    })
             }, 5000);
         });
 

@@ -45,6 +45,30 @@ namespace CouchPotato.Controllers
             return View(model);
         }
 
+        public IActionResult GenreVoting(string name, long userid, long lobbyid, Boolean host)
+        {
+            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            GenreVotingViewModel model = new GenreVotingViewModel();
+            model.name = name;
+            model.userid = userid;
+            model.lobbyid = lobbyid;
+            model.host = host;
+            //model.genres = lobby.Genre;
+            model.genres = new string[] { "g1", "g2", "g3", "g4", "g5", "g6" };
+            model.genreSwipes = lobby.GenreSwipes;
+
+            return View(model);
+        }
+
+        public virtual ActionResult Card(long userid, long lobbyid)
+        {
+            CardViewModel model = new CardViewModel();
+            model.src = "";
+            model.title = "test title";
+            model.description = "test description";
+            return PartialView(model);
+        }
+
         public Dictionary<string, long> joinLobby(string name, string lobbyid)
         {
             Dictionary<string, long> returnValue = new Dictionary<string, long>();
@@ -75,7 +99,7 @@ namespace CouchPotato.Controllers
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
 
-            setConfig(lobby.ID.ToString() , "Aniflix", 10, 5);// set default config
+            setConfig(lobby.ID.ToString() , "Aniflix", 3, 2);// set default config
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
@@ -136,6 +160,12 @@ namespace CouchPotato.Controllers
         {
             Lobby lobby = Control.getLobby(lobbyid);
             return lobby.GetMode();
+        }
+
+        public void swipeGenre(long userid, string lobbyid, string genre)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            lobby.swipeGenre(userid, genre);
         }
     }
 }

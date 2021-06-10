@@ -18,29 +18,6 @@ namespace CouchPotato.Backend
     {
         private static IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
 
-        public static HttpResponseMessage post(string request)
-        {
-            //TODO
-            try
-            {
-
-            }
-            catch (ApiChangedException e)
-            {
-                Console.WriteLine(e);
-                switch (e.Provider)
-                {
-                    case Provider.Aniflix:
-                        break;
-                    case Provider.Netflix:
-                        break;
-                    case Provider.AmazonPrime:
-                        break;
-                }
-            }
-            return null;
-        }
-
         public static Lobby createLobby(User host)
         {
             Lobby lobby = LobbyFactory.build(host);
