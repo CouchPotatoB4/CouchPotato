@@ -3,6 +3,10 @@
 
 <div id="cardContainer"></div>
 
+<div id="spinner">
+    <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+    Waiting for other users
+</div>
 
 @section scripts{
     <script type="text/javascript">
@@ -11,30 +15,52 @@
         var lobbyid = @Model.lobbyid;
         var userid = @Model.userid;
         var host = @Model.host.ToString().ToLower();
+        var swipes = @Model.swipes;
 
         var intervalId;
 
         $(document).ready(function () {
-
-            $("#cardContainer").load("@Url.Action("get","Main")", { 'id' : '123' }, function (response, status, xhr)
-            {
-            if (status == "error")
-            {
-                alert("An error occurred while loading the results.");
-            }
+            $("#spinner").hide();
+            loadCard(0);
         });
+
+        function upvote(currentShownumber, currentShowid) {
+            if (swipes > 0) {
+                swipes--;
+                $.post("/Main/swipeShow", { userid: userid, lobbyid: lobbyid, showid: currentShowid });
+                loadCard(currentShownumber + 1);
+            } else {
+                end();
+            }
+        }
+
+        function downvote(currentShownumber) {
+            loadCard(currentShownumber + 1);
+        }
+
+        function loadCard(shownumber) {
+            $("#cardContainer").load("@Url.Action("Card", "Main")", { 'userid': userid, 'lobbyid': lobbyid, 'shownumber': shownumber }, function (response, status, xhr)
+            {
+            if (status == "error") {
+            alert("An error occurred while loading the results.");
+            }
+            });
+        }
+
+        function end() {
+            $("#cardContainer").hide();
+            $("#spinner").show();
             intervalId = setInterval(function () {
                 $.get("/Main/getMode", { lobbyid: lobbyid })
                     .done(function (data) {
-                        if (data == 2) {
-                            window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                        if (data == 3) {
+                            window.open("/Main/Endscreen?lobbyid=" + lobbyid, "_self");
                         }
                     })
                     .fail(function (data) {
                         alert("Error while trying to get Lobby mode");
                     })
             }, 5000);
-        });
-
+        }
     </script>
 }

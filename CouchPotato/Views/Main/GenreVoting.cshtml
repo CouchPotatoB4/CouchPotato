@@ -27,7 +27,7 @@
 
         @foreach (var d in Model.genres)
         {
-            @:genreArray.push("@d");
+            @:genreArray.push("@d.Name");
         }
 
         var intervalId;

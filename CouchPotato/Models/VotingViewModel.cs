@@ -8,5 +8,6 @@ namespace CouchPotato.Models
         public long userid { get; set; }
         public long lobbyid { get; set; }
         public Boolean host { get; set; }
+        public int swipes { get; set; }
     }
 }
