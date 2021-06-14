@@ -51,5 +51,11 @@ namespace CouchPotato.Backend.ShowUtil
             Description = description;
             CoverPath = coverStorage;
         }
+
+
+        public bool Equals(Show s)
+        {
+            return id == s.id;
+        }
     }
 }
