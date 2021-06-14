@@ -1,4 +1,5 @@
 ﻿using System;
+using CouchPotato.Backend.ShowUtil;
 
 namespace CouchPotato.Models
 {
@@ -8,7 +9,7 @@ namespace CouchPotato.Models
         public long userid { get; set; }
         public long lobbyid { get; set; }
         public Boolean host { get; set; }
-        public string[] genres { get; set; }
+        public Genre[] genres { get; set; }
         public int genreSwipes { get; set; }
     }
 }

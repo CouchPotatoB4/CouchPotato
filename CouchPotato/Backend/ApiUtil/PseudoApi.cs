@@ -23,7 +23,7 @@ namespace CouchPotato.Backend.ApiUtil
             shows = new Show[50];
             for (int i = 0; i < 50; i++)
             {
-                Show show = VotableFactory.buildShow(i, "Show" + i, "Description", "");
+                Show show = VotableFactory.buildShow(i, "Show" + i, "Description", "https://assets.onlinepianist.com/songs/artists/rick_astley_bg.jpg");
                 show.AddGenre(genres[i % 10]);
                 shows[i] = show;
             }

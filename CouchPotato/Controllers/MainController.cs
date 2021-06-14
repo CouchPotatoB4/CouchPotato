@@ -10,6 +10,7 @@ using CouchPotato.Backend;
 using CouchPotato.Backend.UserUtil;
 using CouchPotato.Backend.LobbyUtil;
 using CouchPotato.Backend.ApiUtil;
+using CouchPotato.Backend.ShowUtil;
 using CouchPotato.Models;
 
 
@@ -28,13 +29,24 @@ namespace CouchPotato.Controllers
         }
         public IActionResult Voting(string name, long userid, long lobbyid, Boolean host)
         {
+            Lobby lobby = Control.getLobby(lobbyid.ToString());
             VotingViewModel model = new VotingViewModel();
             model.name = name;
             model.userid = userid;
             model.lobbyid = lobbyid;
             model.host = host;
+            model.swipes = lobby.Swipes;
             return View(model);
         }
+
+        public IActionResult Endscreen(long lobbyid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            EndscreenViewModel model = new EndscreenViewModel();
+            model.shows = lobby.Shows;
+            return View(model);
+        }
+
         public IActionResult Lobby(string name, long userid,long lobbyid, Boolean host)
         {
             LobbyViewModel model = new LobbyViewModel();
@@ -53,19 +65,22 @@ namespace CouchPotato.Controllers
             model.userid = userid;
             model.lobbyid = lobbyid;
             model.host = host;
-            //model.genres = lobby.Genre;
-            model.genres = new string[] { "g1", "g2", "g3", "g4", "g5", "g6" };
+            model.genres = lobby.Genres;
             model.genreSwipes = lobby.GenreSwipes;
 
             return View(model);
         }
 
-        public virtual ActionResult Card(long userid, long lobbyid)
+        public virtual ActionResult Card(long userid, long lobbyid, int shownumber)
         {
+            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            Show show = lobby.getNextShow(shownumber);
             CardViewModel model = new CardViewModel();
-            model.src = "";
-            model.title = "test title";
-            model.description = "test description";
+            model.src = show.CoverPath;
+            model.title = show.Name;
+            model.description = show.Description;
+            model.shownumber = shownumber;
+            model.showid = show.Id;
             return PartialView(model);
         }
 
@@ -99,7 +114,7 @@ namespace CouchPotato.Controllers
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
 
-            setConfig(lobby.ID.ToString() , "Aniflix", 3, 2);// set default config
+            setConfig(lobby.ID.ToString() , "Test", 3, 2);// set default config
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
@@ -110,10 +125,8 @@ namespace CouchPotato.Controllers
         {
             Lobby lobby = Control.getLobby(lobbyid);
             ISet<User> users = lobby.getUser();
-            User host = lobby.getHost();
 
             List<String> returnValue = new List<string>();
-            returnValue.Add(host.Name);
             foreach (var user in users)
             {
                 returnValue.Add(user.Name);
@@ -136,6 +149,9 @@ namespace CouchPotato.Controllers
                     break;
                 case "Aniflix":
                     api = Provider.Aniflix.getApi();
+                    break;
+                case "Test":
+                    api = new PseudoApi();
                     break;
                 default:
                     HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -166,6 +182,12 @@ namespace CouchPotato.Controllers
         {
             Lobby lobby = Control.getLobby(lobbyid);
             lobby.swipeGenre(userid, genre);
+        }
+
+        public void swipeShow(long userid, string lobbyid, int showid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            lobby.swipeFilm(userid, showid);
         }
     }
 }

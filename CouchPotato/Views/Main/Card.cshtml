@@ -6,7 +6,7 @@
         <div class="card-body">
             <h5 class="card-title">@Model.title</h5>
             <p class="card-text">@Model.description</p>
-            <button type="button" class="btn btn-success" onclick="upvote()">up</button>
-            <button type="button" class="btn btn-Danger" onclick="downvote()">down</button>
+            <button type="button" class="btn btn-success" onclick="upvote(@Model.shownumber , @Model.showid)">up</button>
+            <button type="button" class="btn btn-danger" onclick="downvote(@Model.shownumber)">down</button>
         </div>
     </div>

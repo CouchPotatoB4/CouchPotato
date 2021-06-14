@@ -240,6 +240,10 @@ namespace CouchPotato.Backend.LobbyUtil
                         }
                     }
                 }
+                if (checkSwipesLeft())
+                {
+                    nextMode();
+                }
             }
         }
 
