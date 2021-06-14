@@ -31,5 +31,11 @@ namespace CouchPotato.Backend.ShowUtil
         {
             Name = name;
         }
+
+        public bool Equals(Votable v)
+        {
+            if (v == null) return false;
+            return name.Equals(v.name) && votes == v.votes;
+        }
     }
 }
