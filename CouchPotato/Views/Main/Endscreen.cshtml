@@ -1,0 +1,33 @@
+﻿
+@model EndscreenViewModel
+
+<div>
+    <div class="card" style="width: 18rem; background-color: gold;">
+        <img src="@Model.shows[0].CoverPath" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">@Model.shows[0].Name</h5>
+            <p class="card-text">@Model.shows[0].Description</p>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem; background-color: silver;">
+        <img src="@Model.shows[1].CoverPath" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">@Model.shows[1].Name</h5>
+            <p class="card-text">@Model.shows[1].Description</p>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem; background-color: #bf8970;">
+        <img src="@Model.shows[2].CoverPath" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">@Model.shows[2].Name</h5>
+            <p class="card-text">@Model.shows[2].Description</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="d-grid">
+    <a class="btn btn-success btn-lg" asp-area="" asp-controller="Main" asp-action="Index">Finish</a>
+</div>

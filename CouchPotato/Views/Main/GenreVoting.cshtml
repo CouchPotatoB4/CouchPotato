@@ -1,0 +1,77 @@
+﻿
+@model GenreVotingViewModel
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title" id="cardTitle"></h5>
+        <button type="button" class="btn btn-success" onclick="upvote()">up</button>
+        <button type="button" class="btn btn-Danger" onclick="next()">down</button>
+    </div>
+</div>
+
+<div id="spinner">
+    <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+    Waiting for other users
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var name = "@Model.name";
+        var lobbyid = @Model.lobbyid;
+        var userid = @Model.userid;
+        var host = @Model.host.ToString().ToLower();
+        var swipes = @Model.genreSwipes;
+        var currentGenre = 0;
+        var genreArray = [];
+
+        @foreach (var d in Model.genres)
+        {
+            @:genreArray.push("@d.Name");
+        }
+
+        var intervalId;
+
+        $(document).ready(function () {
+            $("#spinner").hide();
+            $("#cardTitle").html(genreArray[currentGenre]);
+            
+        });
+
+        function upvote() {
+            if (swipes > 0) {
+                swipes--;
+                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genre: genreArray[currentGenre] })
+                next();
+            } else {
+                end();
+            }
+        }
+
+        function next() {
+            currentGenre++;
+            if (genreArray.length == currentGenre) {
+                end();
+            } else {
+                $("#cardTitle").html(genreArray[currentGenre])
+            }
+        }
+
+        function end() {
+            $(".card").hide();
+            $("#spinner").show();
+            intervalId = setInterval(function () {
+                $.get("/Main/getMode", { lobbyid: lobbyid })
+                    .done(function (data) {
+                        if (data == 2) {
+                            window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                        }
+                    })
+                    .fail(function (data) {
+                        alert("Error while trying to get Lobby mode");
+                    })
+            }, 5000);
+        }
+
+    </script>
+}

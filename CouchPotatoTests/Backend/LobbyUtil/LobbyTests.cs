@@ -1,7 +1,6 @@
 ﻿using CouchPotato.Backend.ApiUtil;
 using CouchPotato.Backend.ShowUtil;
 using CouchPotato.Backend.UserUtil;
-using CouchPotatoTests.PseudoClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
