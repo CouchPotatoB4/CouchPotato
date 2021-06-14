@@ -117,7 +117,7 @@ namespace CouchPotato.Backend.LobbyUtil
             }
             else if (mode == Mode.FILM_SELECTION)
             {
-                selectedShows = evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
+                selectedShows = evaluation.evaluateShow(selectedShows, EvaluationType.VOTED);
                 mode = Mode.OVER;
             }
             return mode;

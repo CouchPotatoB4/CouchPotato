@@ -27,7 +27,9 @@
         function upvote(currentShownumber, currentShowid) {
             if (swipes > 0) {
                 swipes--;
-                $.post("/Main/swipeShow", { userid: userid, lobbyid: lobbyid, showid: currentShowid });
+                $.post("/Main/swipeShow", { userid: userid, lobbyid: lobbyid, showid: currentShowid });  
+            }
+            if (swipes > 0) {
                 loadCard(currentShownumber + 1);
             } else {
                 end();

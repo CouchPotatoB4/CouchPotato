@@ -30,7 +30,15 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public ISet<Show> evaluateShow(ISet<Show> shows, EvaluationType type)
         {
-            return (ISet<Show>)evaluate((ISet<Votable>)shows, type);
+            var sorted = evaluate(new HashSet<Votable>(shows), type);
+            var casted = new HashSet<Show>();
+
+            foreach (Votable v in sorted)
+            {
+                casted.Add((Show)v);
+            }
+
+            return casted;
         }
 
         private ISet<Votable> evaluate(ISet<Votable> set, EvaluationType type)
