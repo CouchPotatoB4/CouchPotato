@@ -162,6 +162,16 @@ namespace CouchPotato.Backend.LobbyUtil
             }
         }
 
+
+
+        public string ApiName 
+        { 
+            get
+            {
+                return providerApi.GetType().Name;
+            }
+        }
+
         public void loadPage(int page)
         {
             if (mode == Mode.FILM_SELECTION)

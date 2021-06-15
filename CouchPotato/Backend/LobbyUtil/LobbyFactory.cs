@@ -22,7 +22,16 @@ namespace CouchPotato.Backend.LobbyUtil
 
         private static long createId()
         {
-            return usedId.Count + 1;
+            Random random = new Random();
+            int returnValue = 0;
+            
+            do
+            {
+                returnValue = random.Next();
+            }
+            while (usedId.Contains(returnValue));
+            
+            return returnValue;
         }
     }
 }
