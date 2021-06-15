@@ -5,15 +5,11 @@
     <div>
         <div>
             <h1>Lobby ID: @Model.lobbyid</h1>
+            <button type="button" class="btn btn-success" onclick="CopyToClipboard(@Model.lobbyid)">Copy to Clipboard</button>
             <ul class="list-group" id="lobbyMemberList">
             </ul>
         </div>
-        @if (Model.host)
-        {
-            <div>
-                <p>confíg</p>
-            </div>
-        }
+        <div id="LobbyConfigContainer"></div>
 
     </div>
     @if (Model.host)
@@ -41,10 +37,14 @@
 
         $(document).ready(function () {
             LoadLobbymembers();
+            LoadLobbyConfig();
 
             intervalId = setInterval(function () {
                 checkLobbyMode();
                 LoadLobbymembers();
+                if (!host) {
+                    LoadLobbyConfig();
+                }
             }, 5000);
         })
 
@@ -80,13 +80,13 @@
                 })
         }
 
+        function LoadLobbyConfig() {
+            $("#LobbyConfigContainer").load("@Url.Action("LobbyConfig", "Main")", {"lobbyid": lobbyid})
+        }
+
         function displayLobbymembers() {
             $("#lobbyMemberList").empty();
             memberlist.forEach(element => $("#lobbyMemberList").append($("<li></li>").text(element).addClass("list-group-item")));
-        }
-
-        function submitConfig() {
-
         }
 
         function startVoting() {
@@ -94,6 +94,13 @@
                 .fail(function (data) {
                     alert("Error while trying to start voting");
                 })
+        }
+
+        function CopyToClipboard(myID) {
+            var controlValue = document.getElementById(myID).value;
+            alert(controlValue);
+            window.clipboardData.setData('Text', controlValue);
+            alert('Copied text to clipboard : ' + controlValue);
         }
 
     </script>

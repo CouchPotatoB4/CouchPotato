@@ -7,6 +7,6 @@ namespace CouchPotato.Models
         public string name { get; set; }
         public long userid { get; set; }
         public long lobbyid { get; set; }
-        public Boolean host { get; set; }
+        public bool host { get; set; }
     }
 }
