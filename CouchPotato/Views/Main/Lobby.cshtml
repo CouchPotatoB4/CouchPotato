@@ -5,7 +5,6 @@
     <div>
         <div>
             <h1>Lobby ID: @Model.lobbyid</h1>
-            <button type="button" class="btn btn-success" onclick="CopyToClipboard(@Model.lobbyid)">Copy to Clipboard</button>
             <ul class="list-group" id="lobbyMemberList">
             </ul>
         </div>
@@ -45,7 +44,7 @@
                 if (!host) {
                     LoadLobbyConfig();
                 }
-            }, 5000);
+            }, 2000);
         })
 
         function checkLobbyMode() {
@@ -94,13 +93,6 @@
                 .fail(function (data) {
                     alert("Error while trying to start voting");
                 })
-        }
-
-        function CopyToClipboard(myID) {
-            var controlValue = document.getElementById(myID).value;
-            alert(controlValue);
-            window.clipboardData.setData('Text', controlValue);
-            alert('Copied text to clipboard : ' + controlValue);
         }
 
     </script>

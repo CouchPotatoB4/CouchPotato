@@ -16,16 +16,16 @@ namespace CouchPotato.Backend
 {
     public static class Control
     {
-        private static IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
+        private static IDictionary<long, Lobby> lobbies = new Dictionary<long, Lobby>(); 
 
         public static Lobby createLobby(User host)
         {
             Lobby lobby = LobbyFactory.build(host);
-            lobbies.Add(lobby.ID.ToString() , lobby);
+            lobbies.Add(lobby.ID , lobby);
             return lobby;
         }
 
-        public static Lobby getLobby(String id)
+        public static Lobby getLobby(long id)
         {
             if (lobbies.ContainsKey(id))
             {
