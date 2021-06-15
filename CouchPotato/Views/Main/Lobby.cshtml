@@ -8,12 +8,7 @@
             <ul class="list-group" id="lobbyMemberList">
             </ul>
         </div>
-        @if (Model.host)
-        {
-            <div>
-                <p>confíg</p>
-            </div>
-        }
+        <div id="LobbyConfigContainer"></div>
 
     </div>
     @if (Model.host)
@@ -41,11 +36,15 @@
 
         $(document).ready(function () {
             LoadLobbymembers();
+            LoadLobbyConfig();
 
             intervalId = setInterval(function () {
                 checkLobbyMode();
                 LoadLobbymembers();
-            }, 5000);
+                if (!host) {
+                    LoadLobbyConfig();
+                }
+            }, 2000);
         })
 
         function checkLobbyMode() {
@@ -80,13 +79,13 @@
                 })
         }
 
+        function LoadLobbyConfig() {
+            $("#LobbyConfigContainer").load("@Url.Action("LobbyConfig", "Main")", {"lobbyid": lobbyid})
+        }
+
         function displayLobbymembers() {
             $("#lobbyMemberList").empty();
             memberlist.forEach(element => $("#lobbyMemberList").append($("<li></li>").text(element).addClass("list-group-item")));
-        }
-
-        function submitConfig() {
-
         }
 
         function startVoting() {

@@ -49,7 +49,7 @@ namespace CouchPotato.Backend.LobbyUtil
             return mode;
         }
 
-        public ISet<User> getUser()
+        public ISet<User> getAllUsers()
         {
             ISet<User> allUser = new HashSet<User>();
             allUser.Add(host);
@@ -105,6 +105,7 @@ namespace CouchPotato.Backend.LobbyUtil
                 mode = Mode.GENRE_SELECTION;
                 selectedGenres = new HashSet<Genre>(providerApi.getGenres());
                 setUserSwipes(gSwipes);
+                setUserUnready();
             }
             else if (mode == Mode.GENRE_SELECTION)
             {
@@ -114,6 +115,7 @@ namespace CouchPotato.Backend.LobbyUtil
                 loadPage(0);
                 selectedShows = new HashSet<Show>(providerApi.getShows(selectedGenres));
                 setUserSwipes(sSwipes);
+                setUserUnready();
             }
             else if (mode == Mode.FILM_SELECTION)
             {
@@ -130,6 +132,15 @@ namespace CouchPotato.Backend.LobbyUtil
                 u.Swipes = swipes;
             }
             host.Swipes = swipes;
+        }
+
+        private void setUserUnready()
+        {
+            foreach (User u in users)
+            {
+                u.Ready = false;
+            }
+            host.Ready = false;
         }
 
         public bool isOpen()
@@ -162,15 +173,32 @@ namespace CouchPotato.Backend.LobbyUtil
             }
         }
 
-        public void loadPage(int page)
+
+
+        public string ApiName 
+        { 
+            get
+            {
+                return providerApi.GetType().Name;
+            }
+        }
+
+        public bool loadPage(int page)
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                foreach (Show s in providerApi.getShows(page))
+                var showsOnPage = providerApi.getShows(page);
+                if (showsOnPage == null || showsOnPage.Length == 0)
+                {
+                    return false;
+                }
+                foreach (Show s in showsOnPage)
                 {
                     selectedShows.Add(s);
                 }
+                return true;
             }
+            return false;
         }
 
 
@@ -179,7 +207,10 @@ namespace CouchPotato.Backend.LobbyUtil
             if (number >= selectedShows.Count)
             {
                 int page = number / ApiConstants.PAGE_SIZE;
-                loadPage(page);
+                if (!loadPage(page))
+                {
+                    throw new System.ArgumentOutOfRangeException();
+                }
             }
             return selectedShows.ElementAt(number);
         }
@@ -200,31 +231,13 @@ namespace CouchPotato.Backend.LobbyUtil
                         }
                     }
                 }
-                if (checkSwipesLeft())
+                if (allUsersReady())
                 {
                     nextMode();
                 }
             }
         }
-        private Boolean checkSwipesLeft()
-        {
-            Boolean noSwipesLeft = true;
-            foreach (User user in users)
-            {
-                if (user.Swipes > 0)
-                {
-                    noSwipesLeft = false;
-                }
-            }
-            if (host.Swipes > 0)
-            {
-                noSwipesLeft = false;
-            }
-            return noSwipesLeft;
-        }
-
-
-
+        
         public void swipeFilm(long userId, int showId)
         {
             if (mode == Mode.FILM_SELECTION)
@@ -240,11 +253,23 @@ namespace CouchPotato.Backend.LobbyUtil
                         }
                     }
                 }
-                if (checkSwipesLeft())
+                if (allUsersReady())
                 {
                     nextMode();
                 }
             }
+        }
+
+        public bool allUsersReady()
+        {
+            foreach (User user in getAllUsers())
+            {
+                if (!user.Ready)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public ISet<Genre> getGenreResults()

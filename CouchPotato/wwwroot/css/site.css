@@ -12,6 +12,10 @@ a {
   color: #0366d6;
 }
 
+h1 {
+    text-align: center;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

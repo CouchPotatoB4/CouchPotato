@@ -19,7 +19,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 
 			lobby1.addUser(user2);
 			lobby1.addUser(user3);
-			ISet<User> users = lobby1.getUser();
+			ISet<User> users = lobby1.getAllUsers();
 
 			Assert.IsNotNull(users);
 			//Assert.IsTrue(users.Contains(hostUser)); TODO
