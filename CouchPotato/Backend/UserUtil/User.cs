@@ -11,7 +11,13 @@ namespace CouchPotato.Backend.UserUtil
         private long id;
         private string name;
         private int swipes;
+        private bool ready;
 
+        public bool Ready 
+        {
+            get { return ready; }
+            set { ready = value; }
+        }
 
         public long ID
         {

@@ -1,7 +1,6 @@
 ﻿using CouchPotato.Backend.ApiUtil;
 using CouchPotato.Backend.ShowUtil;
 using CouchPotato.Backend.UserUtil;
-using CouchPotatoTests.PseudoClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -20,7 +19,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 
 			lobby1.addUser(user2);
 			lobby1.addUser(user3);
-			ISet<User> users = lobby1.getUser();
+			ISet<User> users = lobby1.getAllUsers();
 
 			Assert.IsNotNull(users);
 			//Assert.IsTrue(users.Contains(hostUser)); TODO

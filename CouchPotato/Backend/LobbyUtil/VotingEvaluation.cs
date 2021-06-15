@@ -13,45 +13,111 @@ namespace CouchPotato.Backend.LobbyUtil
         ALL, VOTED, HIGHEST
     }
 
-    public class VotingEvaluation : IComparer<Votable>
+    public class VotingEvaluation
     {
-        public int Compare(Votable x, Votable y)
+        public ISet<Genre> evaluateGenre(ISet<Genre> genres, EvaluationType type)
         {
-            return x.Votes.CompareTo(y.Votes);
+            var sorted = evaluate(new HashSet<Votable>(genres), type);
+            var casted = new HashSet<Genre>(); 
+
+            foreach (Votable v in sorted)
+            {
+                casted.Add((Genre)v);
+            }
+
+            return casted;
         }
 
-        internal ISet<Genre> evaluateGenre(ISet<Genre> genres)
+        public ISet<Show> evaluateShow(ISet<Show> shows, EvaluationType type)
         {
-            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
-            ISet<Genre> sorted = new SortedSet<Genre>(genres, this);
+            var sorted = evaluate(new HashSet<Votable>(shows), type);
+            var casted = new HashSet<Show>();
+
+            foreach (Votable v in sorted)
+            {
+                casted.Add((Show)v);
+            }
+
+            return casted;
+        }
+
+        private ISet<Votable> evaluate(ISet<Votable> set, EvaluationType type)
+        {
+            switch (type)
+            {
+                case EvaluationType.ALL: 
+                    return sortAll(set);
+                case EvaluationType.HIGHEST: 
+                    return sortAfterHighest(set);
+                case EvaluationType.VOTED:
+                    return sortAfterVoted(set);
+                default:
+                    return set;
+            }
+        }
+
+        private ISet<Votable> sortAfterHighest(ISet<Votable> set)
+        {
+            ISet<Votable> sorted = new HashSet<Votable>();
+
+            int highestVote = getHighestVote(set);
+            foreach (Votable v in set)
+            {
+                if (v.Votes == highestVote)
+                {
+                    sorted.Add(v);
+                }
+            }
+
             return sorted;
         }
 
-        internal ISet<Genre> evaluateGenre(ISet<Genre> genres, EvaluationType type)
-        {   
-            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
-            ISet<Genre> sorted = new SortedSet<Genre>(genres, this);
-            return sorted;
+        private ISet<Votable> sortAfterVoted(ISet<Votable> set)
+        {
+            var copy = new HashSet<Votable>(set);
+            foreach (Votable v in copy)
+            {
+                if (v.Votes == 0) set.Remove(v);
+            }
+            return sortAll(set);
         }
 
-        internal ISet<Show> evaluateShow(ISet<Show> shows)
+        private ISet<Votable> sortAll(ISet<Votable> set)
         {
-            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
-            ISet<Show> sorted = new SortedSet<Show>(shows, this);
-            return sorted;
+            IList<Votable> list = new List<Votable>(set);
+
+            for (int i = 1; i < list.Count; i++)
+            {
+                for (int j = list.Count - 1; j > 0 + i; j--)
+                {
+                    if (list[j].Votes > list[j - 1].Votes)
+                    {
+                        switchElements(list, j, j - 1);
+                    }
+                }
+            }
+
+            return list.ToHashSet<Votable>();
         }
 
-        internal ISet<Show> evaluateShow(ISet<Show> shows, EvaluationType type)
+        private int getHighestVote(ISet<Votable> set)
         {
-            //This method is slightly different from the evaluate method, due to strange InvalidCastException from HashSet'1 to ISet'1
-            ISet<Show> sorted = new SortedSet<Show>(shows, this);
-            return sorted;
+            int highestVote = 0;
+            foreach (Votable v in set)
+            {
+                if (v.Votes > highestVote)
+                {
+                    highestVote = v.Votes;
+                }
+            }
+            return highestVote;
         }
 
-        internal ISet<Votable> evaluate(ISet<Votable> set, EvaluationType type)
+        private void switchElements(IList<Votable> list, int one, int two)
         {
-            ISet<Votable> sorted = new SortedSet<Votable>(set, this);
-            return sorted;
+            Votable tmp = list[one];
+            list[one] = list[two];
+            list[two] = tmp;
         }
     }
 }
