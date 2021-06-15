@@ -41,7 +41,7 @@
         function upvote() {
             if (swipes > 0) {
                 swipes--;
-                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genre: genreArray[currentGenre] })
+                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genre: genreArray[currentGenre] });
             }
             if (swipes > 0) {
                 next();
@@ -52,14 +52,18 @@
 
         function next() {
             currentGenre++;
-            if (genreArray.length == currentGenre) {
+            if (genreArray.length == currentGenre)
+            {
                 end();
-            } else {
-                $("#cardTitle").html(genreArray[currentGenre])
+            }
+            else
+            {
+                $("#cardTitle").html(genreArray[currentGenre]);
             }
         }
 
         function end() {
+            $.post("/Main/setUserReady", { "lobbyid": lobbyid, "userid": userid });
             $(".card").hide();
             $("#spinner").show();
             intervalId = setInterval(function () {
@@ -72,7 +76,7 @@
                     .fail(function (data) {
                         alert("Error while trying to get Lobby mode");
                     })
-            }, 5000);
+            }, 2000);
         }
 
     </script>

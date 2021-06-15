@@ -27,9 +27,9 @@ namespace CouchPotato.Controllers
         {
             return View();
         }
-        public IActionResult Voting(string name, long userid, long lobbyid, Boolean host)
+        public IActionResult Voting(string name, long userid, long lobbyid, bool host)
         {
-            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            Lobby lobby = Control.getLobby(lobbyid);
             VotingViewModel model = new VotingViewModel();
             model.name = name;
             model.userid = userid;
@@ -41,13 +41,13 @@ namespace CouchPotato.Controllers
 
         public IActionResult Endscreen(long lobbyid)
         {
-            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            Lobby lobby = Control.getLobby(lobbyid);
             EndscreenViewModel model = new EndscreenViewModel();
             model.shows = lobby.Shows;
             return View(model);
         }
 
-        public IActionResult Lobby(string name, long userid,long lobbyid, Boolean host)
+        public IActionResult Lobby(string name, long userid,long lobbyid, bool host)
         {
             LobbyViewModel model = new LobbyViewModel();
             model.name = name;
@@ -57,9 +57,9 @@ namespace CouchPotato.Controllers
             return View(model);
         }
 
-        public IActionResult GenreVoting(string name, long userid, long lobbyid, Boolean host)
+        public IActionResult GenreVoting(string name, long userid, long lobbyid, bool host)
         {
-            Lobby lobby = Control.getLobby(lobbyid.ToString());
+            Lobby lobby = Control.getLobby(lobbyid);
             GenreVotingViewModel model = new GenreVotingViewModel();
             model.name = name;
             model.userid = userid;
@@ -73,18 +73,27 @@ namespace CouchPotato.Controllers
 
         public virtual ActionResult Card(long userid, long lobbyid, int shownumber)
         {
-            Lobby lobby = Control.getLobby(lobbyid.ToString());
-            Show show = lobby.getNextShow(shownumber);
-            CardViewModel model = new CardViewModel();
-            model.src = show.CoverPath;
-            model.title = show.Name;
-            model.description = show.Description;
-            model.shownumber = shownumber;
-            model.showid = show.Id;
-            return PartialView(model);
+            Lobby lobby = Control.getLobby(lobbyid);
+
+            try
+            {
+                Show show = lobby.getNextShow(shownumber);
+                CardViewModel model = new CardViewModel();
+                model.src = show.CoverPath;
+                model.title = show.Name;
+                model.description = show.Description;
+                model.shownumber = shownumber;
+                model.showid = show.Id;
+                return PartialView(model);
+            }
+            catch(System.ArgumentOutOfRangeException)     
+            {
+                setUserReady(lobbyid, userid);
+                return NotFound();
+            }
         }
 
-        public ActionResult<Dictionary<string, long>> joinLobby(string name, string lobbyid)
+        public ActionResult<Dictionary<string, long>> joinLobby(string name, long lobbyid)
         {
             Dictionary<string, long> returnValue = new Dictionary<string, long>();
             User user = UserFactory.build(name);
@@ -106,7 +115,7 @@ namespace CouchPotato.Controllers
 
         public ActionResult LobbyConfig(long lobbyId)
         {
-            Lobby lobby = Control.getLobby(lobbyId.ToString());
+            Lobby lobby = Control.getLobby(lobbyId);
             LobbyConfigViewModel model = new LobbyConfigViewModel();
             model.api = lobby.ApiName;
             model.swipes_genre = lobby.GenreSwipes;
@@ -121,19 +130,19 @@ namespace CouchPotato.Controllers
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
 
-            setConfig(lobby.ID.ToString() , "PseudoApi", 3, 2);// set default config
+            setConfig(lobby.ID , "PseudoApi", 3, 2);// set default config
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
             return returnValue;
         }
 
-        public List<String> getMembers(string lobbyid)
+        public List<string> getMembers(long lobbyid)
         {
             Lobby lobby = Control.getLobby(lobbyid);
-            ISet<User> users = lobby.getUser();
+            ISet<User> users = lobby.getAllUsers();
 
-            List<String> returnValue = new List<string>();
+            List<string> returnValue = new List<string>();
             foreach (var user in users)
             {
                 returnValue.Add(user.Name);
@@ -142,7 +151,23 @@ namespace CouchPotato.Controllers
             return returnValue;
         }
 
-        public void setConfig(string lobbyid, String provider,int swipes, int genresCount)
+        public void setUserReady(long lobbyid, long userid)
+        {
+            Lobby lobby = Control.getLobby(lobbyid);
+            lobby.getUser(userid).Ready = true;
+
+            if (allUsersAreReady(lobbyid))
+            {
+                lobby.nextMode();
+            }
+        }      
+
+        private bool allUsersAreReady(long lobbyid)
+        {
+            return Control.getLobby(lobbyid).allUsersReady();
+        }
+
+        public void setConfig(long lobbyid, string provider,int swipes, int genresCount)
         {
             Lobby lobby = Control.getLobby(lobbyid);//TODO
             IApi api;
@@ -169,29 +194,28 @@ namespace CouchPotato.Controllers
             lobby.setConfiguration(api, swipes, genresCount);
         }
 
-        public void startVoting(string lobbyid, long userid)
+        public void startVoting(long lobbyid, long userid)
         {
             Lobby lobby = Control.getLobby(lobbyid);
             if (lobby.getHost().ID.Equals(userid))
             {
                 lobby.nextMode();
             }
-
         }
 
-        public Mode getMode (string lobbyid)
+        public Mode getMode (long lobbyid)
         {
             Lobby lobby = Control.getLobby(lobbyid);
             return lobby.GetMode();
         }
 
-        public void swipeGenre(long userid, string lobbyid, string genre)
+        public void swipeGenre(long userid, long lobbyid, string genre)
         {
             Lobby lobby = Control.getLobby(lobbyid);
             lobby.swipeGenre(userid, genre);
         }
 
-        public void swipeShow(long userid, string lobbyid, int showid)
+        public void swipeShow(long userid, long lobbyid, int showid)
         {
             Lobby lobby = Control.getLobby(lobbyid);
             lobby.swipeFilm(userid, showid);
