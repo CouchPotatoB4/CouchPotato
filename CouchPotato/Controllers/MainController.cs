@@ -84,7 +84,7 @@ namespace CouchPotato.Controllers
             return PartialView(model);
         }
 
-        public Dictionary<string, long> joinLobby(string name, string lobbyid)
+        public ActionResult<Dictionary<string, long>> joinLobby(string name, string lobbyid)
         {
             Dictionary<string, long> returnValue = new Dictionary<string, long>();
             User user = UserFactory.build(name);
@@ -92,20 +92,27 @@ namespace CouchPotato.Controllers
             
             if (lobby == null)
             {
-                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
-                message.Content = new StringContent("No such Lobby");
-                throw new HttpResponseException(message);
+                return NotFound("No such Lobby found");
             }
             if (!Control.joinLobby(user, lobby))
             {
-                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
-                message.Content = new StringContent("Lobby no longer open");
-                throw new HttpResponseException(message);
+                return NotFound("Lobby no longer active");
             }
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
             return returnValue;
+        }
+
+        public ActionResult LobbyConfig(long lobbyId)
+        {
+            Lobby lobby = Control.getLobby(lobbyId.ToString());
+            LobbyConfigViewModel model = new LobbyConfigViewModel();
+            model.api = lobby.ApiName;
+            model.swipes_genre = lobby.GenreSwipes;
+            model.swipes_show = lobby.Swipes;
+
+            return PartialView(model);
         }
 
         public Dictionary<string, long> CreateLobby(string name)
@@ -114,7 +121,7 @@ namespace CouchPotato.Controllers
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
 
-            setConfig(lobby.ID.ToString() , "Test", 3, 2);// set default config
+            setConfig(lobby.ID.ToString() , "PseudoApi", 3, 2);// set default config
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);
@@ -141,16 +148,16 @@ namespace CouchPotato.Controllers
             IApi api;
             switch (provider)
             {   
-                case "Netflix":
+                case "NetflixApi":
                     api = Provider.Netflix.getApi();
                     break;
-                case "AmazonPrime":
+                case "AmazonPrimeApi":
                     api = Provider.AmazonPrime.getApi();
                     break;
-                case "Aniflix":
+                case "AniflixApi":
                     api = Provider.Aniflix.getApi();
                     break;
-                case "Test":
+                case "PseudoApi":
                     api = new PseudoApi();
                     break;
                 default:
