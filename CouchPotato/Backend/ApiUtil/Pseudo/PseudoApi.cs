@@ -3,6 +3,7 @@ using CouchPotato.Backend.ShowUtil;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -53,7 +54,7 @@ namespace CouchPotato.Backend.ApiUtil
 
         public Show[] getShows()
         {
-            return shows;
+            return shows.ToArray<Show>();
         }
 
         public Show[] getShows(Genre genre)
@@ -74,7 +75,6 @@ namespace CouchPotato.Backend.ApiUtil
             List<Show> filteredShows = new List<Show>();
             foreach (var show in shows)
             {
-                if (show == null) break;
                 foreach (var genre in genres)
                 {
                     if (show.Genres.Contains(genre))
@@ -89,14 +89,24 @@ namespace CouchPotato.Backend.ApiUtil
 
         public Show[] getShows(int page)
         {
-            int max = (page + 1) * ApiConstants.PAGE_SIZE > shows.Length ? shows.Length - (ApiConstants.PAGE_SIZE * page) : ApiConstants.PAGE_SIZE;
-            Show[] resultArray = new Show[max];
-            for (int i = 0; i < max; i++)
+            if (shows.Count == 0) getShows();
+
+            IList<Show> localShows = new List<Show>();
+
+            int start = page * ApiConstants.PAGE_SIZE;
+            int end = start + ApiConstants.PAGE_SIZE;
+
+            if (start < shows.Count)
             {
-                int number = page * ApiConstants.PAGE_SIZE + i;
-                resultArray[i] = shows[number];
+                end = end < shows.Count ? end : shows.Count;
+
+                for (int i = start; i < end; i++)
+                {
+                    localShows.Add(shows[i]);
+                }
             }
-            return resultArray;
+
+            return localShows.ToArray<Show>();
         }
 
         protected override Task<HttpResponseMessage> get(string header)

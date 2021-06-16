@@ -104,12 +104,12 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 }
             }
 
-            return shows;
+            return shows.ToArray<Show>();
         }
 
         private int showIsNew(int id, string name)
         {
-            for (int i = 0; i < shows.Length; i++)
+            for (int i = 0; i < shows.Count; i++)
             {
                 Show s = shows[i];
                 if (s == null) break;
@@ -164,9 +164,9 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             int start = page * ApiConstants.PAGE_SIZE;
             int end = start + ApiConstants.PAGE_SIZE;
 
-            if (start < shows.Length)
+            if (start < shows.Count)
             {
-                end = end < shows.Length ? end : shows.Length;
+                end = end < shows.Count ? end : shows.Count;
 
                 for (int i = start; i < end; i++)
                 {
