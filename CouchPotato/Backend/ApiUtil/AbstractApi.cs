@@ -41,5 +41,11 @@ namespace CouchPotato.Backend.ApiUtil
         }
 
         protected abstract Task<HttpResponseMessage> get(string header);
+
+        protected string getResponseBody(string header)
+        {
+            var content = get(header).Result.Content;
+            return content.ReadAsStringAsync().Result;
+        }
     }   
 }

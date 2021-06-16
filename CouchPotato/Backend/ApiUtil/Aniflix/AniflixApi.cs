@@ -15,11 +15,11 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
 {
     public class AniflixApi : AbstractApi, IApi
     {   
-        private static string SHOW = "show";
-        private static string HEADER_API = "api";
-        private static string HEADER_SHOW = HEADER_API + "/" + SHOW + "/index";
-        private static string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
-        private static string HEADER_STORAGE = "storage";
+        private const string SHOW = "show";
+        private const string HEADER_API = "api";
+        private const string HEADER_SHOW = HEADER_API + "/" + SHOW + "/index";
+        private const string HEADER_GENRE = HEADER_API + "/" + SHOW + "/genres";
+        private const string HEADER_STORAGE = "storage";
 
         public AniflixApi() : base("https://www2.aniflix.tv") 
         {
@@ -29,12 +29,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
         protected override Task<HttpResponseMessage> get(string header)
         {
             return client.GetAsync(query + "/" + header);
-        }
-
-        private string getResponseBody(string header)
-        {
-            var content = get(header).Result.Content;
-            return content.ReadAsStringAsync().Result;
         }
 
         public Image getCoverForShow(int id)
@@ -191,9 +185,10 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 {
                     try
                     {
-                        var genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(getResponseBody(HEADER_GENRE)).ToArray();
+                        var responseBody = getResponseBody(HEADER_GENRE);
+                        var genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(responseBody);
 
-                        genres = new Genre[genreWithShows.Length];
+                        genres = new Genre[genreWithShows.Count];
                         for (int i = 0; i < genres.Length; i++)
                         {
                             string genre = genreWithShows[i].name;
