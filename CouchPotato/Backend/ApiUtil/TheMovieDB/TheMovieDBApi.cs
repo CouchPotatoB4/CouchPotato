@@ -15,7 +15,9 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
         private const string KEY = "?api_key=0333faa2caaf38355723eef129425e6c";
         private const string HEADER_GENRE = "genre/movie/list";
         private const string HEADER_MOVIE_POPULAR = "movie/popular";
-        private const string QUERY_IMAGES = "https://image.tmdb.org/t/p/w500";
+        private const string QUERY_IMAGES = "https://image.tmdb.org/t/p/w500/";
+        private const string HEADER_PAGE = "&page=";
+        private int maxPages = -1;
 
         private IDictionary<int, Genre> genres = new SortedDictionary<int, Genre>();
 
@@ -26,7 +28,20 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         protected override Task<HttpResponseMessage> get(string header)
         {
-            return client.GetAsync(query + "/" + header + KEY);
+            string wholeQuery = query + "/" + header + KEY;
+            return client.GetAsync(wholeQuery);
+        }
+
+        private Task<HttpResponseMessage> getFromPage(string header, int page)
+        {
+            string wholeQuery = query + "/" + header + KEY + HEADER_PAGE + page;
+            return client.GetAsync(wholeQuery);
+        }
+
+        private string getResponseBodyFromPage(string header, int page)
+        {
+            var content = getFromPage(header, page).Result.Content;
+            return content.ReadAsStringAsync().Result;
         }
 
         public Image getCoverForShow(int id)
@@ -35,7 +50,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             {
                 if (s.Id == id)
                 {
-                    string url = QUERY_IMAGES + "/" + s.CoverPath;
+                    string url = QUERY_IMAGES + s.CoverPath;
                     try
                     {
                         HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -65,9 +80,9 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                     try
                     {
                         var responseBody = getResponseBody(HEADER_GENRE);
-                        var genreJsons = JsonConvert.DeserializeObject<List<GenreJson>>(responseBody);
+                        var genreJsons = JsonConvert.DeserializeObject<GenreJsonRoot>(responseBody);
 
-                        foreach (var each in genreJsons)
+                        foreach (var each in genreJsons.genres)
                         {
                             var genre = VotableFactory.buildGenre(each.name);
                             genres.Add(each.id, genre);
@@ -75,7 +90,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                     }
                     catch (Exception e)
                     {
-
+                        throw new Exception("Error while getting the genres.");
                     }
                 }
             }
@@ -84,43 +99,19 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         public Show[] getShows()
         {
-            if (shows == null)
-            {
-                if (isStatusCodeOk())
-                {
-                    try
-                    {
-                        var responseBody = getResponseBody(HEADER_MOVIE_POPULAR);
-                        var showJsons = JsonConvert.DeserializeObject<List<ShowJson>>(responseBody);
-
-                        shows = new Show[showJsons.Count];
-
-                        int i = 0;
-                        foreach (var each in showJsons)
-                        {
-                            var show = VotableFactory.buildShow(each.id, each.title, each.overview, each.poster_path);
-                            foreach (int key in each.genre_ids)
-                            {
-                                show.AddGenre(genres[key]);
-                            }
-                            shows[i] = show;
-                            i++;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-
-                    }
-                }
-            }
-            return shows;
+            return shows.ToArray<Show>();
         }
 
 
-        public Show[] getShows(ISet<Genre> genres)
+        public Show[] getFilteredShows(ISet<Genre> genres)
+        {
+            return getFilteredShows(genres, shows);
+        }
+
+        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
         {
             if (genres == null) getGenres();
-            if (shows == null) getShows();
+            if (shows.Count() == 0) getShows();
 
             ISet<Show> showSet = new HashSet<Show>();
             foreach (Show s in shows)
@@ -137,33 +128,37 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             return showSet.ToArray();
         }
 
-        public Show[] getShows(Genre genre)
+        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
         {
-            ISet<Genre> genres = new HashSet<Genre>();
-            genres.Add(genre);
-            return getShows(genres);
-        }
+            if (!(maxPages == -1 || maxPages > page)) throw new System.ArgumentOutOfRangeException("MaxPages: " + maxPages + " , current page: " + page);
+            
+            ISet<Show> localShows = new HashSet<Show>();
 
-        public Show[] getShows(int page)
-        {
-            if (shows == null) getShows();
-
-            Show[] localShows = new Show[ApiConstants.PAGE_SIZE];
-
-            int start = page * ApiConstants.PAGE_SIZE;
-            int end = start + ApiConstants.PAGE_SIZE;
-
-            if (start < shows.Length)
+            try
             {
-                end = end < shows.Length ? end : shows.Length;
+                var responseBody = getResponseBodyFromPage(HEADER_MOVIE_POPULAR, (page + 1));
+                var showJsons = JsonConvert.DeserializeObject<ShowJsonRoot>(responseBody);
+                if (maxPages == -1) maxPages = showJsons.total_pages;
 
-                for (int i = start; i < end; i++)
+                foreach (var each in showJsons.results)
                 {
-                    localShows[i - start] = shows[i];
+                    string imagePath = QUERY_IMAGES + each.poster_path;
+                    var show = VotableFactory.buildShow(each.id, each.title, each.overview, imagePath);
+                    foreach (int genreid in each.genre_ids)
+                    {
+                        show.Genres.Add(this.genres[genreid]);
+                    }
+                    localShows.Add(show);
                 }
             }
+            catch (Exception e)
+            {
+                throw new Exception("Error in getting Shows from Page: " + page);
+            }
 
-            return localShows;
+            var filteredShows = getFilteredShows(genres, localShows);
+            ((List<Show>)shows).AddRange(filteredShows);        
+            return filteredShows;
         }
     }
 }

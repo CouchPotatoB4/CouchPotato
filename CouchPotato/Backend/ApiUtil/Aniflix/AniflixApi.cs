@@ -61,7 +61,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
 
         public Show[] getShows()
         {
-            if (shows == null)
+            if (shows.Count == 0)
             {
                 if (isStatusCodeOk())
                 {
@@ -104,12 +104,12 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 }
             }
 
-            return shows;
+            return shows.ToArray<Show>();
         }
 
         private int showIsNew(int id, string name)
         {
-            for (int i = 0; i < shows.Length; i++)
+            for (int i = 0; i < shows.Count; i++)
             {
                 Show s = shows[i];
                 if (s == null) break;
@@ -127,10 +127,10 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return null;
         }
 
-        public Show[] getShows(ISet<Genre> genres)
+        public Show[] getFilteredShows(ISet<Genre> genres)
         {
             if (genres == null) getGenres();
-            if (shows == null) getShows();
+            if (shows.Count == 0) getShows();
 
             ISet<Show> showSet = new HashSet<Show>();
             foreach (Show s in shows)
@@ -147,34 +147,27 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
             return showSet.ToArray();
         }
 
-        public Show[] getShows(Genre genre)
-        {
-            ISet<Genre> genres = new HashSet<Genre>();
-            genres.Add(genre);
-            return getShows(genres);
-        }
-
         //Beginning from 0
-        public Show[] getShows(int page)
+        public bool loadPage(int page)
         {
-            if (shows == null) getShows();
+            if (shows.Count == 0) getShows();
 
-            Show[] localShows = new Show[ApiConstants.PAGE_SIZE];
+            IList<Show> localShows = new List<Show>();
 
             int start = page * ApiConstants.PAGE_SIZE;
             int end = start + ApiConstants.PAGE_SIZE;
 
-            if (start < shows.Length)
+            if (start < shows.Count)
             {
-                end = end < shows.Length ? end : shows.Length;
+                end = end < shows.Count ? end : shows.Count;
 
                 for (int i = start; i < end; i++)
                 {
-                    localShows[i - start] = shows[i];
+                    shows.Add(shows[i]);
                 }
             }
 
-            return localShows;
+            return true;
         }
 
         public Genre[] getGenres()
@@ -203,6 +196,16 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                
             }
             return genres;
+        }
+
+        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
+        {
+            throw new NotImplementedException();
         }
     }
 }
