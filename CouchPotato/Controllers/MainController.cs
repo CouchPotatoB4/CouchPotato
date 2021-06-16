@@ -84,6 +84,7 @@ namespace CouchPotato.Controllers
                 model.description = show.Description;
                 model.shownumber = shownumber;
                 model.showid = show.Id;
+                model.showgenre = show.Genres.ToArray();
                 return PartialView(model);
             }
             catch(System.ArgumentOutOfRangeException)     

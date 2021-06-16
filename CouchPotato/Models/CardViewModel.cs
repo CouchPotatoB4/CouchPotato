@@ -1,4 +1,5 @@
 ﻿using System;
+using CouchPotato.Backend.ShowUtil;
 
 namespace CouchPotato.Models
 {
@@ -9,5 +10,6 @@ namespace CouchPotato.Models
         public string description { get; set; }
         public int shownumber { get; set; }
         public int showid { get; set; }
+        public Genre[] showgenre { get; set; }
     }
 }
