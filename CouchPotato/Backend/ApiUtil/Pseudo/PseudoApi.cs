@@ -70,7 +70,7 @@ namespace CouchPotato.Backend.ApiUtil
             return filteredShows.ToArray();
         }
 
-        public Show[] getShows(ISet<Genre> genres)
+        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
         {
             List<Show> filteredShows = new List<Show>();
             foreach (var show in shows)
@@ -87,26 +87,14 @@ namespace CouchPotato.Backend.ApiUtil
             return filteredShows.ToArray();
         }
 
-        public Show[] getShows(int page)
+        public Show[] getFilteredShows(ISet<Genre> genres)
         {
-            if (shows.Count == 0) getShows();
+            return getFilteredShows(genres, shows);
+        }
 
-            IList<Show> localShows = new List<Show>();
-
-            int start = page * ApiConstants.PAGE_SIZE;
-            int end = start + ApiConstants.PAGE_SIZE;
-
-            if (start < shows.Count)
-            {
-                end = end < shows.Count ? end : shows.Count;
-
-                for (int i = start; i < end; i++)
-                {
-                    localShows.Add(shows[i]);
-                }
-            }
-
-            return localShows.ToArray<Show>();
+        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
+        {
+            return null;
         }
 
         protected override Task<HttpResponseMessage> get(string header)

@@ -13,11 +13,11 @@ namespace CouchPotato.Backend.ApiUtil
     {
         Show[] getShows();
 
-        Show[] getShows(Genre genre);
+        Show[] getFilteredShows(ISet<Genre> genres);
 
-        Show[] getShows(ISet<Genre> genres);
+        Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows);
 
-        Show[] getShows(int page);
+        Show[] loadFilteredPage(int page, ISet<Genre> genres);
 
         Genre[] getGenres();
 

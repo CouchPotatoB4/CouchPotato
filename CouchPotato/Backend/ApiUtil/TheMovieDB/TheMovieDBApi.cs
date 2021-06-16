@@ -103,10 +103,15 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
         }
 
 
-        public Show[] getShows(ISet<Genre> genres)
+        public Show[] getFilteredShows(ISet<Genre> genres)
+        {
+            return getFilteredShows(genres, shows);
+        }
+
+        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
         {
             if (genres == null) getGenres();
-            if (shows == null) getShows();
+            if (shows.Count() == 0) getShows();
 
             ISet<Show> showSet = new HashSet<Show>();
             foreach (Show s in shows)
@@ -123,18 +128,11 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             return showSet.ToArray();
         }
 
-        public Show[] getShows(Genre genre)
-        {
-            ISet<Genre> genres = new HashSet<Genre>();
-            genres.Add(genre);
-            return getShows(genres);
-        }
-
-        public Show[] getShows(int page)
+        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
         {
             if (!(maxPages == -1 || maxPages > page)) throw new System.ArgumentOutOfRangeException("MaxPages: " + maxPages + " , current page: " + page);
-
-            IList<Show> localShows = new List<Show>();
+            
+            ISet<Show> localShows = new HashSet<Show>();
 
             try
             {
@@ -148,7 +146,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                     var show = VotableFactory.buildShow(each.id, each.title, each.overview, imagePath);
                     foreach (int genreid in each.genre_ids)
                     {
-                        show.Genres.Add(genres[genreid]);
+                        show.Genres.Add(this.genres[genreid]);
                     }
                     localShows.Add(show);
                 }
@@ -158,7 +156,9 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                 throw new Exception("Error in getting Shows from Page: " + page);
             }
 
-            return localShows.ToArray<Show>();
+            var filteredShows = getFilteredShows(genres, localShows);
+            ((List<Show>)shows).AddRange(filteredShows);        
+            return filteredShows;
         }
     }
 }
