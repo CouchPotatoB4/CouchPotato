@@ -36,6 +36,7 @@ namespace CouchPotato.Controllers
             model.lobbyid = lobbyid;
             model.host = host;
             model.swipes = lobby.Swipes;
+            model.selectedGenre = lobby.Genres;
             return View(model);
         }
 
@@ -44,6 +45,7 @@ namespace CouchPotato.Controllers
             Lobby lobby = Control.getLobby(lobbyid);
             EndscreenViewModel model = new EndscreenViewModel();
             model.shows = lobby.Shows;
+            model.anzUser = lobby.getAllUsers().Count();
             return View(model);
         }
 
@@ -85,6 +87,7 @@ namespace CouchPotato.Controllers
                 model.shownumber = shownumber;
                 model.showid = show.Id;
                 model.showgenre = show.Genres.ToArray();
+                model.selectedGenre = lobby.Genres;
                 return PartialView(model);
             }
             catch(System.ArgumentOutOfRangeException)     
@@ -160,6 +163,7 @@ namespace CouchPotato.Controllers
             if (allUsersAreReady(lobbyid))
             {
                 lobby.nextMode();
+                Console.WriteLine("setUserReady -> nextMode");
             }
         }      
 
@@ -205,6 +209,7 @@ namespace CouchPotato.Controllers
             if (lobby.getHost().ID.Equals(userid))
             {
                 lobby.nextMode();
+                Console.WriteLine("startVoting -> nextMode");
             }
         }
 
