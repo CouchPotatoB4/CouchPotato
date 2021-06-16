@@ -6,9 +6,9 @@
 /cs/CouchPotato/bin/Debug/
 /cs/CouchPotatoTestProject/obj/Debug/
 /cs/CouchPotatoTestProject/bin/Debug/
-/cs/CouchPotato/.vs/CouchPotato/config/
-/cs/CouchPotato/.vs/CouchPotato/DesignTimeBuild/
 /cs/CouchPotato/TestResults/
+/CouchPotato/.vs/
+/.vs
 
 # User-specific files
 *.suo
@@ -63,5 +63,3 @@ x64/
 *.pidb
 *.log
 *.scc
-/CouchPotato/.vs/CouchPotato/v16/TestStore/0
-/cs/CouchPotato/.vs/CouchPotato/v16/TestStore/0

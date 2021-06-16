@@ -11,15 +11,15 @@ namespace CouchPotato.Backend.ApiUtil
 {
     public enum Provider
     {
-        Netflix, AmazonPrime, Aniflix
+        Netflix, AmazonPrime, Aniflix, TheMovieDB
     }
 
-    static class ProviderMethods
+    public static class ProviderMethods
     {
-        //TODO
         private static IApi NETFLIX;
         private static IApi AMAZON_PRIME;
         private static IApi ANIFLIX = new Aniflix.AniflixApi();
+        private static IApi TheMovieDB = new TheMovieDB.TheMovieDBApi();
 
         public static IApi getApi(this Provider provider)
         {
@@ -28,8 +28,9 @@ namespace CouchPotato.Backend.ApiUtil
                 case Provider.Netflix: return NETFLIX;
                 case Provider.AmazonPrime: return AMAZON_PRIME;
                 case Provider.Aniflix: return ANIFLIX;
+                case Provider.TheMovieDB: return TheMovieDB;
+                default: return null;
             }
-            return null;
         }
     }
 }

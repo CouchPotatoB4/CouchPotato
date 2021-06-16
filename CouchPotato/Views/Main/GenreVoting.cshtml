@@ -1,0 +1,94 @@
+﻿
+@model GenreVotingViewModel
+
+<div class="container d-flex justify-content-center align-middle">
+    <div class="card" style="width: 30rem;">
+        <div class="card-body">
+            <h5 class="card-title text-center" id="cardTitle"></h5>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-success w-100" onclick="upvote()"><i class="fas fa-thumbs-up"></i></button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-danger w-100" onclick="next()"><i class="fas fa-thumbs-down"></i></button>
+                    </div>
+                </div>           
+            </div>
+
+        </div>
+    </div>
+
+    <div id="spinner">
+        <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+        Waiting for other users
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var name = "@Model.name";
+        var lobbyid = @Model.lobbyid;
+        var userid = @Model.userid;
+        var host = @Model.host.ToString().ToLower();
+        var swipes = @Model.genreSwipes;
+        var currentGenre = 0;
+        var genreArray = [];
+
+        @foreach (var d in Model.genres)
+        {
+            @:genreArray.push("@d.Name");
+        }
+
+        var intervalId;
+
+        $(document).ready(function () {
+            $("#spinner").hide();
+            $("#cardTitle").html(genreArray[currentGenre]);
+            
+        });
+
+        function upvote() {
+            if (swipes > 0) {
+                swipes--;
+                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genre: genreArray[currentGenre] });
+            }
+            if (swipes > 0) {
+                next();
+            } else {
+                end();
+            }
+        }
+
+        function next() {
+            currentGenre++;
+            if (genreArray.length == currentGenre)
+            {
+                end();
+            }
+            else
+            {
+                $("#cardTitle").html(genreArray[currentGenre]);
+            }
+        }
+
+        function end() {
+            $.post("/Main/setUserReady", { "lobbyid": lobbyid, "userid": userid });
+            $(".card").hide();
+            $("#spinner").show();
+            intervalId = setInterval(function () {
+                $.get("/Main/getMode", { lobbyid: lobbyid })
+                    .done(function (data) {
+                        if (data == 2) {
+                            window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                        }
+                    })
+                    .fail(function (data) {
+                        alert("Error while trying to get Lobby mode");
+                    })
+            }, 2000);
+        }
+
+    </script>
+}

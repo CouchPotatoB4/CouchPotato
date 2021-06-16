@@ -1,0 +1,100 @@
+﻿@model LobbyViewModel
+
+
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-6">
+            <h3>Lobby ID: @Model.lobbyid</h3>
+            <ul class="list-group" id="lobbyMemberList">
+            </ul>
+        </div>
+        <div class="col-6">
+            <div id="LobbyConfigContainer"></div>
+        </div>
+    </div>
+    @if (Model.host)
+    {
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-success w-100" onclick="startVoting()">Start</button>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var name = "@Model.name";
+        var lobbyid = @Model.lobbyid;
+        var userid = @Model.userid;
+        var host = @Model.host.ToString().ToLower();
+
+        var memberlist = [];
+        var config = [];
+
+        var intervalId;
+
+        $(document).ready(function () {
+            LoadLobbymembers();
+            LoadLobbyConfig();
+
+            intervalId = setInterval(function () {
+                checkLobbyMode();
+                LoadLobbymembers();
+                if (!host) {
+                    LoadLobbyConfig();
+                }
+            }, 2000);
+        })
+
+        function checkLobbyMode() {
+            $.get("/Main/getMode", { lobbyid: lobbyid })
+                .done(function (data) {
+                    if (data == 1) {
+                        window.open("/Main/GenreVoting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                    }
+                    if (data == 2) {
+                        window.open("/Main/Voting?name=" + name + "&userid=" + userid + "&lobbyid=" + lobbyid + "&host=" + host, "_self");
+                    }
+                })
+                .fail(function (data) {
+                    alert("Error while trying to get Lobby mode");
+                })
+        }
+
+        function LoadLobbymembers() {
+            $.get("/Main/getMembers", {lobbyid: lobbyid })
+                .done(function (data) {
+                    var sortedData = data.slice().sort();
+                    var equal = (sortedData.length === memberlist.length && sortedData.every(function (value, index) {
+                        return value === memberlist[index];
+                    }));
+                    if (!equal) {
+                        memberlist = sortedData;
+                        displayLobbymembers();
+                    }
+                })
+                .fail(function (data) {
+                    alert("Error while trying to get memberlist");
+                })
+        }
+
+        function LoadLobbyConfig() {
+            $("#LobbyConfigContainer").load("@Url.Action("LobbyConfig", "Main")", {"lobbyid": lobbyid})
+        }
+
+        function displayLobbymembers() {
+            $("#lobbyMemberList").empty();
+            memberlist.forEach(element => $("#lobbyMemberList").append($("<li></li>").text(element).addClass("list-group-item")));
+        }
+
+        function startVoting() {
+            $.post("/Main/startVoting", { lobbyid: lobbyid, userid: userid })
+                .fail(function (data) {
+                    alert("Error while trying to start voting");
+                })
+        }
+
+    </script>
+}

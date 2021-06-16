@@ -1,5 +1,5 @@
 ﻿using CouchPotato.Backend.ApiUtil;
-using CouchPotato.Backend.ApiUtil.Exceptions;
+using CouchPotato.Backend.Exceptions;
 using CouchPotato.Backend.LobbyUtil;
 using CouchPotato.Backend.UserUtil;
 using CouchPotato.Backend.ShowUtil;
@@ -14,40 +14,29 @@ using System.Net.Http;
 
 namespace CouchPotato.Backend
 {
-    public class Control
+    public static class Control
     {
-        private IDictionary<string, Lobby> lobbies = new Dictionary<string, Lobby>(); 
+        private static IDictionary<long, Lobby> lobbies = new Dictionary<long, Lobby>(); 
 
-        public HttpResponseMessage post(string request)
+        public static Lobby createLobby(User host)
         {
-            //TODO
-            try
-            {
+            Lobby lobby = LobbyFactory.build(host);
+            lobbies.Add(lobby.ID , lobby);
+            return lobby;
+        }
 
-            }
-            catch (ApiChangedException e)
+        public static Lobby getLobby(long id)
+        {
+            if (lobbies.ContainsKey(id))
             {
-                Console.WriteLine(e);
-                switch (e.Provider)
-                {
-                    case Provider.Aniflix:
-                        break;
-                    case Provider.Netflix:
-                        break;
-                    case Provider.AmazonPrime:
-                        break;
-                }
+                Lobby lobby;
+                lobbies.TryGetValue(id, out lobby);
+                return lobby;
             }
             return null;
         }
 
-        //PRIVATE
-        public Lobby createLobby(User host)
-        {
-            return LobbyFactory.build(host);
-        }
-
-        private bool joinLobby(User user, Lobby lobby)
+        public static bool joinLobby(User user, Lobby lobby)
         {
             if (lobby.isOpen())
             {
@@ -56,40 +45,41 @@ namespace CouchPotato.Backend
             return lobby.isOpen();
         }
 
-        private void startSelection(Lobby lobby)
+        private static void startSelection(Lobby lobby)
         {
             lobby.nextMode();
         }
 
-        private string[] getGenre(Lobby lobby)
+        private static Genre[] getGenre(Lobby lobby)
         {
-            return lobby.Genre;
+            return lobby.Genres;
         }
 
-        private void swipeGenre(Lobby lobby, long userId, string genre)
+        private static void swipeGenre(Lobby lobby, long userId, string genre)
         {
             lobby.swipeGenre(userId, genre);
         }
 
-        private ISet<Show> getFilms(Lobby lobby)
+        private static Show[] getFilms(Lobby lobby)
         {
             return lobby.Shows;
         }
 
-        private void swipeFilm(Lobby lobby, long userId, int showId)
+        private static void swipeFilm(Lobby lobby, long userId, int showId)
         {
             lobby.swipeFilm(userId, showId);
         }
 
-        private Image getCoverForShow(Lobby lobby, int showId)
+        private static Image getCoverForShow(Lobby lobby, int showId)
         {
             return lobby.getCoverForShow(showId);
         }
 
 
-        private void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
+        private static void setLobbyConfiguration(Lobby lobby, Provider provider, int swipes, int genresCount)
         {
-            lobby.setConfiguration(provider, swipes, genresCount);
+            lobby.setConfiguration(provider.getApi(), swipes, genresCount);
         }
+
     }
 }
