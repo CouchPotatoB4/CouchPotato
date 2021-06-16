@@ -16,7 +16,7 @@ namespace CouchPotato.Backend.ApiUtil
         protected string query;
 
         protected Genre[] genres;
-        protected Show[] shows;
+        protected IList<Show> shows = new List<Show>();
 
         public AbstractApi(string query)
         {

@@ -21,7 +21,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
-        private int sSwipes, gSwipes;
+        private int sSwipes, gSwipes, page = 0;
 
         public Lobby(User host, long id)
         {
@@ -113,7 +113,7 @@ namespace CouchPotato.Backend.LobbyUtil
                 selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
                 
                 loadPage(0);
-                selectedShows = new HashSet<Show>(providerApi.getShows(selectedGenres));
+                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
                 setUserSwipes(sSwipes);
                 setUserUnready();
             }
@@ -167,35 +167,22 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public Show[] Shows
         {
-            get 
-            {
-                return selectedShows.ToArray<Show>(); 
-            }
+            get { return selectedShows.ToArray<Show>(); }
         }
 
 
 
         public string ApiName 
         { 
-            get
-            {
-                return providerApi.GetType().Name;
-            }
+            get { return providerApi.GetType().Name; }
         }
 
         public bool loadPage(int page)
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                var showsOnPage = providerApi.getShows(page);
-                if (showsOnPage == null || showsOnPage.Length == 0)
-                {
-                    return false;
-                }
-                foreach (Show s in showsOnPage)
-                {
-                    selectedShows.Add(s);
-                }
+                providerApi.loadFilteredPage(page, selectedGenres);
+                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
                 return true;
             }
             return false;
@@ -206,7 +193,7 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (number >= selectedShows.Count)
             {
-                int page = number / ApiConstants.PAGE_SIZE;
+                page++;
                 if (!loadPage(page))
                 {
                     throw new System.ArgumentOutOfRangeException();
