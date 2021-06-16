@@ -2,6 +2,9 @@
 @model EndscreenViewModel
 @using System.Text;
 
+<div class="card mb-3 w-100">
+    <p class="text-center h1">@Model.shows[0].Votes of @Model.anzUser Users have voted for:</p>
+</div>
 <div id="cardcontainer" class="d-flex justify-content-center mb-5">
     @foreach (var x in @Model.shows)
     {
