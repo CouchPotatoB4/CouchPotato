@@ -33,8 +33,8 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    testSelector: 'testRun'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    codeCoverageEnabled: true
+    command: test
+    projects: /CouchPotatoTests/CouchPotatoTests.csproj
+    arguments: '--configuration $(buildConfiguration)'
