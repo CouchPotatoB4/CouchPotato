@@ -33,8 +33,9 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
+- script: dotnet test /CouchPotatoTests/CouchPotatoTests.csproj --logger trx
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
   inputs:
-    command: test
-    projects: /CouchPotatoTests/CouchPotatoTests.csproj
-    arguments: '--configuration $(buildConfiguration)'
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
