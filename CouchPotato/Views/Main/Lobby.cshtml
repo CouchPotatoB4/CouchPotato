@@ -1,26 +1,27 @@
 ﻿@model LobbyViewModel
 
 
-<div style="display:block;">
-    <div>
-        <div>
-            <h1>Lobby ID: @Model.lobbyid</h1>
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-6">
+            <h3>Lobby ID: @Model.lobbyid</h3>
             <ul class="list-group" id="lobbyMemberList">
             </ul>
         </div>
-        <div id="LobbyConfigContainer"></div>
-
+        <div class="col-6">
+            <div id="LobbyConfigContainer"></div>
+        </div>
     </div>
     @if (Model.host)
     {
-        <div>
-            <button type="button" class="btn btn-success" onclick="startVoting()">Start</button>
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-success w-100" onclick="startVoting()">Start</button>
+            </div>
         </div>
     }
-
-
-
 </div>
+
 @section scripts{
     <script type="text/javascript">
 

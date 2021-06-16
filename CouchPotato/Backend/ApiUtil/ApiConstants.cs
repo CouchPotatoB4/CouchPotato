@@ -8,6 +8,6 @@ namespace CouchPotato.Backend.ApiUtil
 {
     public class ApiConstants
     {
-        public static int PAGE_SIZE = 20;
+        public const int PAGE_SIZE = 20;
     }
 }

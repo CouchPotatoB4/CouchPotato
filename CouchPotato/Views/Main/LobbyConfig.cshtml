@@ -1,39 +1,45 @@
 ﻿@model LobbyConfigViewModel
 
 <div class="card">
-    <h5 class="card-title">Settings</h5>
     <div class="card-body">
+        <h3 class="card-title">Settings</h3>
         <div class="input-group mb-3">
             <label class="input-group-text" for="inputProvideLable">Provider</label>
             <select class="form-select" id="inputProviderSelect" disabled>
                 @if (@Model.api == "PseudoApi")
                 {
-                <option selected value="PseudoApi">Test</option> }
-                else
+            <option selected value="PseudoApi">Test</option> }
+                        else
+                        {
+            <option value="PseudoApi"> Test </option>}
+                @if (@Model.api == "TheMovieDBApi")
                 {
-                <option value="PseudoApi"> Test </option>}
+            <option selected value="TheMovieDBApi">TheMovieDB</option> }
+                        else
+                        {
+            <option value="TheMovieDBApi">TheMovieDB</option>}
                 @if (@Model.api == "NetflixApi")
                 {
-                <option selected value="NetflixApi">Netflix</option> }
-                else
-                {
-                    <option value="NetflixApi">Netflix</option>}
+            <option selected value="NetflixApi">Netflix</option> }
+                        else
+                        {
+            <option value="NetflixApi">Netflix</option>}
                 @if (@Model.api == "AmazonPrimeApi")
                 {
-                    <option selected value="AmazonPrimeApi">AmazonPrime</option>
-                }
-                else
-                {
-                    <option value="AmazonPrimeApi">AmazonPrime</option>
-                }
+            <option selected value="AmazonPrimeApi">AmazonPrime</option>
+ }
+        else
+        {
+            <option value="AmazonPrimeApi">AmazonPrime</option>
+}
                 @if (@Model.api == "AniflixApi")
                 {
-                    <option selected value="AniflixApi">Aniflix</option>
-                }
-                else
-                {
-                    <option value="AniflixApi">Aniflix</option>
-                }
+            <option selected value="AniflixApi">Aniflix</option>
+ }
+        else
+        {
+            <option value="AniflixApi">Aniflix</option>
+}
             </select>
         </div>
         <div>
