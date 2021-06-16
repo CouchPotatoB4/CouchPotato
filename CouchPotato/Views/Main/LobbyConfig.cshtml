@@ -50,8 +50,6 @@
             <label for="customRangeShow" class="form-label" id="customRangeShowLabel">Show swipes: @Model.swipes_show</label>
             <input type="range" class="form-range" min="1" max="10" value="@Model.swipes_show" id="customRangeShow" disabled>
         </div>
-
-        <button type="button" class="btn btn-success" id="configSubmitbtn" onclick="submitConfig()" style="display:none">Submit</button>
     </div>
 </div>
 
@@ -60,9 +58,14 @@
             //$("#inputProviderSelect option[value='@Model.api']").select();
             $("#customRangeGenre").change(function () {
                 $("#customRangeGenreLabel").text("Genre swipes: " + $("#customRangeGenre").val())
+                submitConfig();
             });
             $("#customRangeShow").change(function () {
                 $("#customRangeShowLabel").text("Show swipes: " + $("#customRangeShow").val())
+                submitConfig();
+            });
+            $("#inputProviderSelect").change(function () {
+                submitConfig();
             });
             if (host) {
                 $("#configSubmitbtn").show();

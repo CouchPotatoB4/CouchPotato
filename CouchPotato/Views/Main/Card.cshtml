@@ -1,7 +1,7 @@
 ﻿@model CardViewModel
 @using System.Text;
 
-    <div class="card" style="min-width:40vw; max-width:100vw" >
+    <div class="card">
 
         <div class="container">
             <div class="row justify-content-md-center">
@@ -22,7 +22,17 @@
                                     {
                                         builder.Append(", ");
                                     }
-                                    builder.Append(@Model.showgenre[i].Name);
+                                    bool isSelected = false;
+                                    foreach(var x in Model.selectedGenre)
+                                    {
+                                        if (@Model.showgenre[i].Name.Equals(x.Name)) { isSelected = true; }
+                                    }
+                                    if (isSelected) {
+                                        builder.Append("<b>" + @Model.showgenre[i].Name + "</b>");
+                                    } else {
+                                        builder.Append(@Model.showgenre[i].Name);
+                                    }
+
                                 }
                                 builder.Append("</p>");
                             }
