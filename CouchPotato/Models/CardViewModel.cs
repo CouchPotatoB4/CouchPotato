@@ -11,5 +11,6 @@ namespace CouchPotato.Models
         public int shownumber { get; set; }
         public int showid { get; set; }
         public Genre[] showgenre { get; set; }
+        public Genre[] selectedGenre { get; set; }
     }
 }
