@@ -185,6 +185,10 @@ namespace CouchPotato.Controllers
                 case "PseudoApi":
                     api = new PseudoApi();
                     break;
+                case "TheMovieDBApi":
+                    api = Provider.TheMovieDB.getApi();
+                    break;
+                    
                 default:
                     HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
                     message.Content = new StringContent("Invalid Provider");

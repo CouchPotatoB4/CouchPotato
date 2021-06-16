@@ -1,18 +1,27 @@
 ﻿
 @model CardViewModel
 
-    <div class="card" style="width: 30rem;">
-        <img src="@Model.src" class="card-img-top">
-        <div class="card-body">
-            <h5 class="card-title">@Model.title</h5>
-            <p class="card-text">@Model.description</p>
-            <div class="container">
-                <div class="row">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-success w-100" onclick="upvote(@Model.shownumber , @Model.showid)"><i class="fas fa-thumbs-up"></i></button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-danger w-100" onclick="downvote(@Model.shownumber)"><i class="fas fa-thumbs-down"></i></button>
+    <div class="card" style="min-width:40vw; max-width:100vw" >
+
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <img src="@Model.src">
+                </div>
+                <div class="col">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.title</h5>
+                        <p class="card-text">@Model.description</p>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-success w-100" onclick="upvote(@Model.shownumber , @Model.showid)"><i class="fas fa-thumbs-up"></i></button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-danger w-100" onclick="downvote(@Model.shownumber)"><i class="fas fa-thumbs-down"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
