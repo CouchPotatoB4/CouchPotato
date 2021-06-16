@@ -1,17 +1,28 @@
 ﻿
 @model GenreVotingViewModel
 
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title" id="cardTitle"></h5>
-        <button type="button" class="btn btn-success" onclick="upvote()">up</button>
-        <button type="button" class="btn btn-Danger" onclick="next()">down</button>
-    </div>
-</div>
+<div class="container d-flex justify-content-center align-middle">
+    <div class="card" style="width: 30rem;">
+        <div class="card-body">
+            <h5 class="card-title text-center" id="cardTitle"></h5>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-success w-100" onclick="upvote()"><i class="fas fa-thumbs-up"></i></button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-danger w-100" onclick="next()"><i class="fas fa-thumbs-down"></i></button>
+                    </div>
+                </div>           
+            </div>
 
-<div id="spinner">
-    <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
-    Waiting for other users
+        </div>
+    </div>
+
+    <div id="spinner">
+        <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+        Waiting for other users
+    </div>
 </div>
 
 @section scripts{
