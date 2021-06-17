@@ -95,7 +95,10 @@ namespace CouchPotato.Backend.LobbyUtil
             var copy = new HashSet<(Votable, int)>(collection);
             foreach (var each in copy)
             {
-                if (each.Item2 == 0) collection.Remove(each);
+                if (each.Item2 == 0)
+                {
+                    collection.Remove(each);
+                }
             }
             return sortAll(collection);
         }
