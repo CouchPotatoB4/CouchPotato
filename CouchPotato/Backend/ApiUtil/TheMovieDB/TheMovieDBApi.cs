@@ -48,7 +48,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         public Genre[] getGenres()
         {
-            if (genres == null)
+            if (genres.Count == 0)
             {
                 if (isStatusCodeOk())
                 {
@@ -103,11 +103,11 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             return showSet.ToArray();
         }
 
-        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
+        public Show[] loadFilteredPage(int page, ISet<Genre> genresSet)
         {
             if (!(maxPages == -1 || maxPages > page)) throw new System.ArgumentOutOfRangeException("MaxPages: " + maxPages + " , current page: " + page);
             
-            ISet<Show> localShows = new HashSet<Show>();
+            ISet<Show> localShows = new HashSet<Show>(); 
 
             try
             {
@@ -119,9 +119,16 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                 {
                     string imagePath = QUERY_IMAGES + each.poster_path;
                     var show = VotableFactory.buildShow(each.id, each.title, each.overview, imagePath);
-                    foreach (int genreid in each.genre_ids)
+
+                    foreach (int genreId in each.genre_ids)
                     {
-                        show.Genres.Add(this.genres[genreid]);
+                        foreach (var genre in genres)
+                        {
+                            if (genreId == genre.Id)
+                            {
+                                show.Genres.Add(genre);
+                            }
+                        }
                     }
                     localShows.Add(show);
                 }
@@ -131,7 +138,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                 throw new Exception("Error in getting Shows from Page: " + page);
             }
 
-            var filteredShows = getFilteredShows(genres, localShows);
+            var filteredShows = getFilteredShows(genresSet, localShows);
             ((List<Show>)shows).AddRange(filteredShows);        
             return filteredShows;
         }
