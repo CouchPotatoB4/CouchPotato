@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace CouchPotato.Backend.LobbyUtil.Tests
 {
-    [TestClass()]
+    [TestClass]
 	public class LobbyTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void getUserTest()
 		{
 			User hostUser = UserFactory.build("User");
@@ -27,7 +27,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			Assert.IsTrue(users.Contains(user3));
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void getUserTest1()
 		{
 			User user1 = UserFactory.build("User");
@@ -45,7 +45,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			Assert.IsNull(lobby1.getUser(invalidID));
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void LobbyRuntroughTest()
 		{
 			User host = UserFactory.build("User");
@@ -58,17 +58,18 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			HashSet<Genre> votedGenres = new HashSet<Genre>();
 			for (int i = 0; i < 5; i++)
 			{
-                Genre genre = lobby.Genres[i];
-                int savedVoteCount = genre.Votes;
+                var genre = lobby.Genres[i];
+                int currentSwipeCount = lobby.getSwipesForGenre(genre);
+				Assert.AreEqual(0, currentSwipeCount);
 				lobby.swipeGenre(host.ID, genre.Name);
-				Assert.AreNotEqual(savedVoteCount, genre.Votes); // Vote count should be updated & not equal to old count
+				Assert.AreNotEqual(currentSwipeCount, lobby.getSwipesForGenre(genre)); // Vote count should be updated & not equal to old count
 				votedGenres.Add(genre);
 			}
 
             Genre invalidVotedGenre = lobby.Genres[9];
-            int genreVoteCount = invalidVotedGenre.Votes;
+            int genreVoteCount = lobby.getSwipesForGenre(invalidVotedGenre);
 			lobby.swipeGenre(host.ID, invalidVotedGenre.Name);
-            Assert.AreEqual(genreVoteCount, invalidVotedGenre.Votes); // Vote count should not modify with swiping after reaching max swipe count 
+            Assert.AreEqual(genreVoteCount, lobby.getSwipesForGenre(invalidVotedGenre)); // Vote count should not modify with swiping after reaching max swipe count 
 
 			int oldSelectedGenreCount = lobby.Genres.Length;
 			Assert.AreEqual(Mode.FILM_SELECTION, lobby.nextMode()); // New Mode: Film Selection
@@ -78,16 +79,16 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
             for (int i = 0; i < 5; i++)
             {
                 Show show = lobby.getNextShow(i);
-                int savedVoteCount = show.Votes;
+                int savedVoteCount = lobby.getSwipesForShow(show);
 				lobby.swipeFilm(host.ID, show.Id);
-                Assert.AreNotEqual(savedVoteCount, show.Votes); // Vote count should be updated & not equal to old count
+                Assert.AreNotEqual(savedVoteCount, lobby.getSwipesForShow(show)); // Vote count should be updated & not equal to old count
 				votedShows.Add(show);
             }
 
-            Show invalidVotedShow = lobby.getNextShow(9);
-            int showVoteCount = invalidVotedShow.Votes;
+			Show invalidVotedShow = lobby.getNextShow(6);
+            int showVoteCount = lobby.getSwipesForShow(invalidVotedShow);
 			lobby.swipeFilm(host.ID, invalidVotedShow.Id);
-            Assert.AreEqual(showVoteCount, invalidVotedShow.Votes); // Vote count should not modify with swiping after reaching max swipe count 
+            Assert.AreEqual(showVoteCount, lobby.getSwipesForShow(invalidVotedShow)); // Vote count should not modify with swiping after reaching max swipe count 
 
 			int oldSelectedShowCount = lobby.Shows.Length;
 			Assert.AreEqual(Mode.OVER, lobby.nextMode()); // New Mode: Over
@@ -95,16 +96,16 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 
             foreach (var votedGenre in votedGenres)
             {
-				Assert.IsTrue(lobby.getGenreResults().Contains(votedGenre));
+				Assert.IsTrue(lobby.getGenreResults().ContainsKey(votedGenre));
             }
 
 			foreach (var votedShow in votedShows)
 			{
-				Assert.IsTrue(lobby.getShowResults().Contains(votedShow));
+				Assert.IsTrue(lobby.getShowResults().ContainsKey(votedShow));
 			}
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void SetConfigurationTest()
 		{
 			LobbyFactory.build(null).setConfiguration(Provider.Aniflix.getApi(), 5, 5);

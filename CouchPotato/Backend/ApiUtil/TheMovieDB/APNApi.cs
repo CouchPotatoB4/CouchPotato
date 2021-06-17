@@ -12,8 +12,8 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
     {
         private const string HEADER_MOVIE = "/movie/";
         private const string HEADER_PROVIDER = "/watch/providers";
-        public const string AMAZON_PRIME = "Amazon Prime";
-        public const string NETFLIX = "Netflix";
+        public static readonly string AMAZON_PRIME = "Amazon Prime";
+        public static readonly string NETFLIX = "Netflix";
         private string provider;
 
         public APNApi(string provider) : base()
@@ -49,7 +49,10 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         private bool flatrateContainsProvider(RBFJson[] flatrate)
         {
-            if (flatrate == null) return false;
+            if (flatrate == null)
+            {
+                return false;
+            }
             foreach (var rbf in flatrate)
             {
                 Console.WriteLine(rbf.provider_name);

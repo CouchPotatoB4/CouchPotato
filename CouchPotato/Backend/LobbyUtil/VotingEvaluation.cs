@@ -15,109 +15,130 @@ namespace CouchPotato.Backend.LobbyUtil
 
     public class VotingEvaluation
     {
-        public ISet<Genre> evaluateGenre(ISet<Genre> genres, EvaluationType type)
+        public IDictionary<string, (Genre, int)> evaluateGenre(IDictionary<string, (Genre, int)> genres, EvaluationType type)
         {
-            var sorted = evaluate(new HashSet<Votable>(genres), type);
-            var casted = new HashSet<Genre>(); 
-
-            foreach (Votable v in sorted)
+            var result = convertToVotable(genres.Values);
+            var sorted = evaluate(result, type);
+            genres.Clear();
+            foreach (var genre in sorted)
             {
-                casted.Add((Genre)v);
+                genres.Add(genre.Item1.Name, ((Genre)genre.Item1, genre.Item2));
             }
-
-            return casted;
+            return genres;
         }
 
-        public ISet<Show> evaluateShow(ISet<Show> shows, EvaluationType type)
+        private ICollection<(Votable, int)> convertToVotable(ICollection<(Genre, int)> genres)
         {
-            var sorted = evaluate(new HashSet<Votable>(shows), type);
-            var casted = new HashSet<Show>();
-
-            foreach (Votable v in sorted)
+            var result = new List<(Votable, int)>();
+            foreach (var genre in genres)
             {
-                casted.Add((Show)v);
+                result.Add(genre);
             }
-
-            return casted;
+            return result;
         }
 
-        private ISet<Votable> evaluate(ISet<Votable> set, EvaluationType type)
+        public IDictionary<int, (Show, int)> evaluateShow(IDictionary<int, (Show, int)> shows, EvaluationType type)
+        {
+            var result = convertToVotable(shows.Values);
+            var sorted = evaluate(result, type);
+            shows.Clear();
+            foreach (var show in sorted)
+            {
+                shows.Add(((Show)show.Item1).Id, ((Show)show.Item1, show.Item2));
+            }
+            return shows;
+        }
+
+        private ICollection<(Votable, int)> convertToVotable(ICollection<(Show, int)> shows)
+        {
+            var result = new List<(Votable, int)>();
+            foreach (var show in shows)
+            {
+                result.Add(show);
+            }
+            return result;
+        }
+
+        private ICollection<(Votable, int)> evaluate(ICollection<(Votable, int)> dictionary, EvaluationType type)
         {
             switch (type)
             {
                 case EvaluationType.ALL: 
-                    return sortAll(set);
+                    return sortAll(dictionary);
                 case EvaluationType.HIGHEST: 
-                    return sortAfterHighest(set);
+                    return sortAfterHighest(dictionary);
                 case EvaluationType.VOTED:
-                    return sortAfterVoted(set);
+                    return sortAfterVoted(dictionary);
                 default:
-                    return set;
+                    return null;
             }
         }
 
-        private ISet<Votable> sortAfterHighest(ISet<Votable> set)
+        private ICollection<(Votable, int)> sortAfterHighest(ICollection<(Votable, int)> collection)
         {
-            ISet<Votable> sorted = new HashSet<Votable>();
+            ISet<(Votable, int)> sorted = new HashSet<(Votable, int)>();
 
-            int highestVote = getHighestVote(set);
-            foreach (Votable v in set)
+            int highestVote = getHighestVote(collection);
+            foreach (var each in collection)
             {
-                if (v.Votes == highestVote)
+                if (each.Item2 == highestVote)
                 {
-                    sorted.Add(v);
+                    sorted.Add(each);
                 }
             }
 
             return sorted;
         }
 
-        private ISet<Votable> sortAfterVoted(ISet<Votable> set)
+        private ICollection<(Votable, int)> sortAfterVoted(ICollection<(Votable, int)> collection)
         {
-            var copy = new HashSet<Votable>(set);
-            foreach (Votable v in copy)
+            var copy = new HashSet<(Votable, int)>(collection);
+            foreach (var each in copy)
             {
-                if (v.Votes == 0) set.Remove(v);
+                if (each.Item2 == 0)
+                {
+                    collection.Remove(each);
+                }
             }
-            return sortAll(set);
+            return sortAll(collection);
         }
 
-        private ISet<Votable> sortAll(ISet<Votable> set)
+        private ICollection<(Votable, int)> sortAll(ICollection<(Votable, int)> collection)
         {
-            IList<Votable> list = new List<Votable>(set);
+            IList<(Votable, int)> list = new List<(Votable, int)>(collection);
 
             for (int i = 1; i < list.Count; i++)
             {
                 for (int j = list.Count - 1; j > 0 + i; j--)
                 {
-                    if (list[j].Votes > list[j - 1].Votes)
+                    if (list[j].Item2 > list[j - 1].Item2)
                     {
                         switchElements(list, j, j - 1);
                     }
                 }
             }
 
-            return list.ToHashSet<Votable>();
+            return list.ToHashSet<(Votable, int)>();
         }
 
-        private int getHighestVote(ISet<Votable> set)
+        private int getHighestVote(ICollection<(Votable, int)> collection)
         {
             int highestVote = 0;
-            foreach (Votable v in set)
+            foreach (var each in collection)
             {
-                if (v.Votes > highestVote)
+                if (each.Item2 > highestVote)
                 {
-                    highestVote = v.Votes;
+                    highestVote = each.Item2;
                 }
             }
             return highestVote;
         }
 
-        private void switchElements(IList<Votable> list, int one, int two)
+        private void switchElements(IList<(Votable, int)> collection, int one, int two)
         {
-            Votable tmp = list[one];
-            list[one] = list[two];
-            list[two] = tmp;
+            var tmp = collection[one];
+            collection[one] = collection[two];
+            collection[two] = tmp;
         }
     }
 }
