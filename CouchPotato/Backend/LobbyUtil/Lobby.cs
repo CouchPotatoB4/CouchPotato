@@ -231,13 +231,14 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public void swipeGenre(long userId, string genreName)
         {
-            if (mode == Mode.GENRE_SELECTION)
+            if (mode == Mode.GENRE_SELECTION && getUser(userId).Swipes != 0)
             {
                 if (selectedGenres.ContainsKey(genreName))
                 {
                     var genre = selectedGenres[genreName];
                     genre.Item2++;
                     selectedGenres[genreName] = genre;
+                    getUser(userId).Swipes--;
                 }
                 if (allUsersReady())
                 {
@@ -248,19 +249,30 @@ namespace CouchPotato.Backend.LobbyUtil
         
         public void swipeFilm(long userId, int showId)
         {
-            if (mode == Mode.FILM_SELECTION)
+            if (mode == Mode.FILM_SELECTION && getUser(userId).Swipes != 0)
             {
                 if (selectedShows.ContainsKey(showId))
                 {
                     var show = selectedShows[showId];      
                     show.Item2++;
                     selectedShows[showId] = show;
+                    getUser(userId).Swipes--;
                 }
                 if (allUsersReady())
                 {
                     nextMode();
                 }
             }
+        }
+
+        public int getSwipesForGenre(Genre genre)
+        {
+            return selectedGenres.ContainsKey(genre.Name) ? selectedGenres[genre.Name].Item2 : -1;
+        }
+
+        public int getSwipesForShow(Show show)
+        {
+            return selectedShows.ContainsKey(show.Id) ? selectedShows[show.Id].Item2 : -1;
         }
 
         public bool allUsersReady()
