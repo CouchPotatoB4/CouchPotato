@@ -87,11 +87,14 @@
         }
 
         function startVoting() {
-            $("#btnStart").prop("disabled",true)
-            $.post("/Main/startVoting", { lobbyid: lobbyid, userid: userid })
-                .fail(function (data) {
-                    alert("Error while trying to start voting");
-                })
+            $("#btnStart").prop("disabled", true)
+            setTimeout(function () {
+                $.post("/Main/startVoting", { lobbyid: lobbyid, userid: userid })
+                    .fail(function (data) {
+                        alert("Error while trying to start voting");
+                    })
+            }, 1000); 
+
         }
 
     </script>
