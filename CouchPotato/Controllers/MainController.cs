@@ -136,7 +136,7 @@ namespace CouchPotato.Controllers
             User user = UserFactory.build(name);
             Lobby lobby = Control.createLobby(user);
 
-            setConfig(lobby.ID , "PseudoApi", 3, 2);// set default config
+            setConfig(lobby.ID , "TheMovieDBApi", 3, 2);// set default config
 
             returnValue.Add("userid", user.ID);
             returnValue.Add("lobbyid", lobby.ID);

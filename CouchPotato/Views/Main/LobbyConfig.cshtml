@@ -6,40 +6,38 @@
         <div class="input-group mb-3">
             <label class="input-group-text" for="inputProvideLable">Provider</label>
             <select class="form-select" id="inputProviderSelect" disabled>
-                @if (@Model.api == "PseudoApi")
-                {
-            <option selected value="PseudoApi">Test</option> }
-                        else
-                        {
-            <option value="PseudoApi"> Test </option>}
+
                 @if (@Model.api == "TheMovieDBApi")
                 {
-            <option selected value="TheMovieDBApi">TheMovieDB</option> }
-                        else
-                        {
-            <option value="TheMovieDBApi">TheMovieDB</option>}
+            <option selected value="TheMovieDBApi">TheMovieDB</option>
+ }
+        else
+        {
+            <option value="TheMovieDBApi">TheMovieDB</option>
+}
                 @if (@Model.api == "NetflixApi")
                 {
-            <option selected value="NetflixApi">Netflix</option> }
-                        else
-                        {
-            <option value="NetflixApi">Netflix</option>}
+            <option selected value="NetflixApi">Netflix</option>
+ }
+        else
+        {
+            <option value="NetflixApi">Netflix</option>
+}
                 @if (@Model.api == "AmazonPrimeApi")
                 {
-            <option selected value="AmazonPrimeApi">AmazonPrime</option>
- }
-        else
-        {
-            <option value="AmazonPrimeApi">AmazonPrime</option>
-}
-                @if (@Model.api == "AniflixApi")
+            <option selected value="AmazonPrimeApi">AmazonPrime</option> }
+                        else
+                        {
+            <option value="AmazonPrimeApi">AmazonPrime</option>}
+                @if (@Model.api == "PseudoApi")
                 {
-            <option selected value="AniflixApi">Aniflix</option>
+            <option selected value="PseudoApi">Test</option>
  }
         else
         {
-            <option value="AniflixApi">Aniflix</option>
+            <option value="PseudoApi"> Test </option>
 }
+
             </select>
         </div>
         <div>
