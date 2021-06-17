@@ -7,6 +7,6 @@ namespace CouchPotato.Backend.ShowUtil
 {
     public class Genre : Votable
     {
-        public Genre(string name) : base(name) { } 
+        public Genre(int id, string name) : base(name) { } 
     }
 }

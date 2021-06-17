@@ -15,14 +15,14 @@ namespace CouchPotato.Backend.LobbyUtil
 
     public class VotingEvaluation
     {
-        public IDictionary<string, (Genre, int)> evaluateGenre(IDictionary<string, (Genre, int)> genres, EvaluationType type)
+        public IDictionary<int, (Genre, int)> evaluateGenre(IDictionary<int, (Genre, int)> genres, EvaluationType type)
         {
             var result = convertToVotable(genres.Values);
             var sorted = evaluate(result, type);
             genres.Clear();
             foreach (var genre in sorted)
             {
-                genres.Add(genre.Item1.Name, ((Genre)genre.Item1, genre.Item2));
+                genres.Add(genre.Item1.Id, ((Genre)genre.Item1, genre.Item2));
             }
             return genres;
         }

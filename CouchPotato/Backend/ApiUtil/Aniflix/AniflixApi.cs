@@ -165,7 +165,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                         for (int i = 0; i < genres.Length; i++)
                         {
                             string genre = genreWithShows[i].name;
-                            genres[i] = VotableFactory.buildGenre(genre);
+                            genres[i] = VotableFactory.buildGenre(i, genre);
                         }
                     }
                     catch (Exception e)

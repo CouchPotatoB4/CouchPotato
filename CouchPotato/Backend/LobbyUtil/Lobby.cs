@@ -17,7 +17,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private User host;
         private ISet<User> users = new HashSet<User>();
         private readonly IDictionary<int, (Show, int)> selectedShows = new Dictionary<int, (Show, int)>();
-        private readonly IDictionary<string, (Genre, int)> selectedGenres = new Dictionary<string, (Genre, int)>();
+        private readonly IDictionary<int, (Genre, int)> selectedGenres = new Dictionary<int, (Genre, int)>();
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
@@ -229,15 +229,15 @@ namespace CouchPotato.Backend.LobbyUtil
         }
 
 
-        public void swipeGenre(long userId, string genreName)
+        public void swipeGenre(long userId, int genreId)
         {
             if (mode == Mode.GENRE_SELECTION && getUser(userId).Swipes != 0)
             {
-                if (selectedGenres.ContainsKey(genreName))
+                if (selectedGenres.ContainsKey(genreId))
                 {
-                    var genre = selectedGenres[genreName];
+                    var genre = selectedGenres[genreId];
                     genre.Item2++;
-                    selectedGenres[genreName] = genre;
+                    selectedGenres[genreId] = genre;
                     getUser(userId).Swipes--;
                 }
                 if (allUsersReady())
@@ -267,7 +267,7 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public int getSwipesForGenre(Genre genre)
         {
-            return selectedGenres.ContainsKey(genre.Name) ? selectedGenres[genre.Name].Item2 : -1;
+            return selectedGenres.ContainsKey(genre.Id) ? selectedGenres[genre.Id].Item2 : -1;
         }
 
         public int getSwipesForShow(Show show)
@@ -291,7 +291,7 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (var key in keys)
             {
-                selectedGenres.Add(key.Name, (key, 0));
+                selectedGenres.Add(key.Id, (key, 0));
             }
         }
 
