@@ -33,30 +33,10 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
 
         public Image getCoverForShow(int id)
         {
-            foreach (Show s in shows)
-            {
-                if (s.Id == id)
-                {
-                    string url = query + "/" + HEADER_STORAGE + "/" + s.CoverPath;
-                    try
-                    {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
-                        webRequest.Headers.Add(HttpRequestHeader.Authorization, "User-Agent=Aniflix_App");
-
-                        using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
-                        {
-                            var coverStream = response.GetResponseStream();
-                            return new Bitmap(coverStream);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exceptions.ApiChangedException(Provider.Aniflix, "Error in request GET/image.", e);
-                    }
-                }
-            }
-
-            return null;
+            string wholeQuery = query + "/" + HEADER_STORAGE + "/";
+            var headers = new List<(HttpRequestHeader, string)>();
+            headers.Add((HttpRequestHeader.Authorization, "User-Agent=Aniflix_App"));
+            return base.getCoverForShow(id, wholeQuery, headers);
         }
 
         public Show[] getShows()

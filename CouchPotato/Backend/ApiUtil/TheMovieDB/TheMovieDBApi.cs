@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CouchPotato.Backend.ApiUtil.TheMovieDB
@@ -28,47 +29,23 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         protected override Task<HttpResponseMessage> get(string header)
         {
-            string wholeQuery = query + "/" + header + KEY;
-            return client.GetAsync(wholeQuery);
+            return getFromPage(header, -1);
         }
 
         private Task<HttpResponseMessage> getFromPage(string header, int page)
         {
-            string wholeQuery = query + "/" + header + KEY + HEADER_PAGE + page;
-            return client.GetAsync(wholeQuery);
+            var wholeQuery = new StringBuilder(query + "/" + header + KEY);
+            if (page != -1)
+            {
+                wholeQuery.Append(HEADER_PAGE + page);
+            }
+            return client.GetAsync(wholeQuery.ToString());
         }
 
         private string getResponseBodyFromPage(string header, int page)
         {
             var content = getFromPage(header, page).Result.Content;
             return content.ReadAsStringAsync().Result;
-        }
-
-        public Image getCoverForShow(int id)
-        {
-            foreach (Show s in shows)
-            {
-                if (s.Id == id)
-                {
-                    string url = QUERY_IMAGES + s.CoverPath;
-                    try
-                    {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
-
-                        using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
-                        {
-                            var coverStream = response.GetResponseStream();
-                            return new Bitmap(coverStream);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Can't load Image.");
-                    }
-                }
-            }
-
-            return null;
         }
 
         public Genre[] getGenres()
@@ -108,7 +85,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             return getFilteredShows(genres, shows);
         }
 
-        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
+        public virtual Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
         {
             if (genres == null) getGenres();
             if (shows.Count() == 0) getShows();
@@ -159,6 +136,11 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
             var filteredShows = getFilteredShows(genres, localShows);
             ((List<Show>)shows).AddRange(filteredShows);        
             return filteredShows;
+        }
+
+        public Image getCoverForShow(int id)
+        {
+            return base.getCoverForShow(id, QUERY_IMAGES);
         }
     }
 }

@@ -113,7 +113,6 @@ namespace CouchPotato.Backend.LobbyUtil
                 selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
                 
                 loadPage(0);
-                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
                 setUserSwipes(sSwipes);
                 setUserUnready();
             }
@@ -181,9 +180,21 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                providerApi.loadFilteredPage(page, selectedGenres);
-                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
-                return true;
+                try
+                {
+                    var newShows = providerApi.loadFilteredPage(page, selectedGenres);
+                    if (newShows.Length == 0)
+                    {
+                        this.page++;
+                        return loadPage(this.page);
+                    }
+                    selectedShows.UnionWith(newShows);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
             return false;
         }
