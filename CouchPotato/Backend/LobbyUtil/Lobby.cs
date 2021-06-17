@@ -21,7 +21,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
-        private int sSwipes, gSwipes, page = 0;
+        private int sSwipes, gSwipes, page;
 
         public Lobby(User host, long id)
         {
@@ -38,9 +38,15 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (User u in users)
             {
-                if (u.ID == id) return u;
+                if (u.ID == id)
+                {
+                    return u;
+                }
             }
-            if (host.ID == id) return host;
+            if (host.ID == id)
+            {
+                return host;
+            }
             return null;
         }
 
@@ -93,7 +99,10 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (Show show in selectedShows)
             {
-                if (show.Id == id) return providerApi.getCoverForShow(id);
+                if (show.Id == id)
+                {
+                    return providerApi.getCoverForShow(id);
+                }
             }
             return null;
         }
@@ -113,7 +122,6 @@ namespace CouchPotato.Backend.LobbyUtil
                 selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
                 
                 loadPage(0);
-                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
                 setUserSwipes(sSwipes);
                 setUserUnready();
             }
@@ -181,9 +189,21 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                providerApi.loadFilteredPage(page, selectedGenres);
-                selectedShows = new HashSet<Show>(providerApi.getFilteredShows(selectedGenres));
-                return true;
+                try
+                {
+                    var newShows = providerApi.loadFilteredPage(page, selectedGenres);
+                    if (newShows.Length == 0)
+                    {
+                        this.page++;
+                        return loadPage(this.page);
+                    }
+                    selectedShows.UnionWith(newShows);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
             return false;
         }

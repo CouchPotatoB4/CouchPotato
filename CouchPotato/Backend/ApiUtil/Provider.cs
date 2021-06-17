@@ -16,8 +16,8 @@ namespace CouchPotato.Backend.ApiUtil
 
     public static class ProviderMethods
     {
-        private static IApi NETFLIX;
-        private static IApi AMAZON_PRIME;
+        private static IApi NETFLIX = new TheMovieDB.APNApi(ApiConstants.NETFLIX);
+        private static IApi AMAZON_PRIME = new TheMovieDB.APNApi(ApiConstants.AMAZON_PRIME);
         private static IApi ANIFLIX = new Aniflix.AniflixApi();
         private static IApi TheMovieDB = new TheMovieDB.TheMovieDBApi();
 
