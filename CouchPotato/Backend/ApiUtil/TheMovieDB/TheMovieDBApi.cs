@@ -20,8 +20,6 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
         private const string HEADER_PAGE = "&page=";
         private int maxPages = -1;
 
-        private IDictionary<int, Genre> genres = new SortedDictionary<int, Genre>();
-
         public TheMovieDBApi() : base("https://api.themoviedb.org/3")
         {
             getGenres();
@@ -50,7 +48,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         public Genre[] getGenres()
         {
-            if (genres.Count == 0)
+            if (genres == null)
             {
                 if (isStatusCodeOk())
                 {
@@ -62,7 +60,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                         foreach (var each in genreJsons.genres)
                         {
                             var genre = VotableFactory.buildGenre(each.id, each.name);
-                            genres.Add(each.id, genre);
+                            genres.Add(genre);
                         }
                     }
                     catch (Exception e)
@@ -71,12 +69,12 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
                     }
                 }
             }
-            return genres.Values.ToArray<Genre>();
+            return genres.ToArray();
         }
 
         public Show[] getShows()
         {
-            return shows.ToArray<Show>();
+            return shows.ToArray();
         }
 
 

@@ -16,7 +16,7 @@ namespace CouchPotato.Backend.ApiUtil
         protected HttpClient client = new HttpClient();
         protected string query;
 
-        protected Genre[] genres;
+        protected IList<Genre> genres = new List<Genre>();
         protected IList<Show> shows = new List<Show>();
 
         public AbstractApi(string query)

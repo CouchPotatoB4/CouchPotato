@@ -21,7 +21,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
-        private int sSwipes, gSwipes, page;
+        private int sSwipes, gSwipes, highestPage;
 
         public Lobby(User host, long id)
         {
@@ -118,7 +118,7 @@ namespace CouchPotato.Backend.LobbyUtil
                 mode = Mode.FILM_SELECTION;
                 evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
 
-                loadPage(0);
+                loadNextPage();
                 setUserSwipes(sSwipes);
                 setUserUnready();
             }
@@ -190,18 +190,18 @@ namespace CouchPotato.Backend.LobbyUtil
             get { return providerApi.GetType().Name; }
         }
 
-        public bool loadPage(int page)
+        public bool loadNextPage()
         {
             if (mode == Mode.FILM_SELECTION)
             {
                 try
                 {
                     var genres = getGenresFromDictionary();
-                    var newShows = providerApi.loadFilteredPage(page, genres);
+                    var newShows = providerApi.loadFilteredPage(highestPage, genres);
                     if (newShows.Length == 0)
                     {
-                        this.page++;
-                        return loadPage(this.page);
+                        highestPage++;
+                        return loadNextPage();
                     }
                     AddNewShows(newShows);
                     return true;
@@ -219,8 +219,8 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (number >= selectedShows.Count)
             {
-                page++;
-                if (!loadPage(page))
+                highestPage++;
+                if (!loadNextPage())
                 {
                     throw new System.ArgumentOutOfRangeException();
                 }
