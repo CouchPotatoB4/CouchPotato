@@ -61,7 +61,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
                         foreach (var each in genreJsons.genres)
                         {
-                            var genre = VotableFactory.buildGenre(each.name);
+                            var genre = VotableFactory.buildGenre(each.id, each.name);
                             genres.Add(each.id, genre);
                         }
                     }
