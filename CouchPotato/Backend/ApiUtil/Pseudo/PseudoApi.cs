@@ -22,7 +22,7 @@ namespace CouchPotato.Backend.ApiUtil
 
         public Genre[] getGenres()
         {
-            return genres;
+            return genres.ToArray();
         }
 
         public Show[] getShows()
@@ -83,19 +83,19 @@ namespace CouchPotato.Backend.ApiUtil
         private void buildGenres()
         {
             genres = new Genre[13];
-            genres[0] = VotableFactory.buildGenre("Horror");
-            genres[1] = VotableFactory.buildGenre("Fantasy");
-            genres[2] = VotableFactory.buildGenre("Blogbuster");
-            genres[3] = VotableFactory.buildGenre("Mystery & Thriller");
-            genres[4] = VotableFactory.buildGenre("Action & Adventure");
-            genres[5] = VotableFactory.buildGenre("Romantik");
-            genres[6] = VotableFactory.buildGenre("Krimi");
-            genres[7] = VotableFactory.buildGenre("Drama");
-            genres[8] = VotableFactory.buildGenre("Science-Fiction");
-            genres[9] = VotableFactory.buildGenre("Komödie");
-            genres[10] = VotableFactory.buildGenre("Animation");
-            genres[11] = VotableFactory.buildGenre("Western");
-            genres[12] = VotableFactory.buildGenre("Adult");
+            genres[0] = VotableFactory.buildGenre(0,"Horror");
+            genres[1] = VotableFactory.buildGenre(1,"Fantasy");
+            genres[2] = VotableFactory.buildGenre(3,"Blogbuster");
+            genres[3] = VotableFactory.buildGenre(2,"Mystery & Thriller");
+            genres[4] = VotableFactory.buildGenre(5,"Action & Adventure");
+            genres[5] = VotableFactory.buildGenre(8678,"Romantik");
+            genres[6] = VotableFactory.buildGenre(76344,"Krimi");
+            genres[7] = VotableFactory.buildGenre(8868,"Drama");
+            genres[8] = VotableFactory.buildGenre(867867,"Science-Fiction");
+            genres[9] = VotableFactory.buildGenre(546,"Komödie");
+            genres[10] = VotableFactory.buildGenre(767,"Animation");
+            genres[11] = VotableFactory.buildGenre(354,"Western");
+            genres[12] = VotableFactory.buildGenre(87,"Adult");
         }
 
         private void buildShows()

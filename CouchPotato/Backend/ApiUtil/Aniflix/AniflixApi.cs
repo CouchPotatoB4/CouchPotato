@@ -162,7 +162,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                         var genreWithShows = JsonConvert.DeserializeObject<List<GenreWithShowsJson>>(responseBody);
 
                         genres = new Genre[genreWithShows.Count];
-                        for (int i = 0; i < genres.Length; i++)
+                        for (int i = 0; i < genres.Count; i++)
                         {
                             string genre = genreWithShows[i].name;
                             genres[i] = VotableFactory.buildGenre(i, genre);
@@ -175,7 +175,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix
                 }
                
             }
-            return genres;
+            return genres.ToArray();
         }
 
         public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)

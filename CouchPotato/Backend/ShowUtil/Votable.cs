@@ -23,8 +23,9 @@ namespace CouchPotato.Backend.ShowUtil
             set { id = value; }
         }
 
-        public Votable(string name)
+        public Votable(int id, string name)
         {
+            Id = id;
             Name = name;
         }
 

@@ -221,10 +221,10 @@ namespace CouchPotato.Controllers
             return lobby.GetMode();
         }
 
-        public void swipeGenre(long userid, long lobbyid, string genre)
+        public void swipeGenre(long userid, long lobbyid, int genreid)
         {
             Lobby lobby = Control.getLobby(lobbyid);
-            lobby.swipeGenre(userid, genre);
+            lobby.swipeGenre(userid, genreid);
         }
 
         public void swipeShow(long userid, long lobbyid, int showid)
