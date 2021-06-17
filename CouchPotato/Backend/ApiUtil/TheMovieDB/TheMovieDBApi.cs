@@ -24,7 +24,7 @@ namespace CouchPotato.Backend.ApiUtil.TheMovieDB
 
         public TheMovieDBApi() : base("https://api.themoviedb.org/3")
         {
-
+            getGenres();
         }
 
         protected override Task<HttpResponseMessage> get(string header)
