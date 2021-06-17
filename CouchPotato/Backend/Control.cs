@@ -55,9 +55,9 @@ namespace CouchPotato.Backend
             return lobby.Genres;
         }
 
-        private static void swipeGenre(Lobby lobby, long userId, string genre)
+        private static void swipeGenre(Lobby lobby, long userId, int genreid)
         {
-            lobby.swipeGenre(userId, genre);
+            lobby.swipeGenre(userId, genreid);
         }
 
         private static Show[] getFilms(Lobby lobby)

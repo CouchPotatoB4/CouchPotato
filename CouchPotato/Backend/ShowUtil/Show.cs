@@ -37,9 +37,8 @@ namespace CouchPotato.Backend.ShowUtil
         }
 
 
-        public Show(int id, string name, string description, string coverStorage) : base(name)
+        public Show(int id, string name, string description, string coverStorage) : base(id, name)
         {
-            Id = id;
             Description = description;
             CoverPath = coverStorage;
         }
