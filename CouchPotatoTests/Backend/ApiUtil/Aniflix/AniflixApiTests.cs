@@ -40,7 +40,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
             Genre[] genres = filledApi.getGenres();
             Assert.IsNotNull(genres);
             Assert.IsNotNull(filledApi.getShows());
-            Assert.IsNotNull(filledApi.getShows(0));
+            Assert.IsNotNull(filledApi.loadPage(0));
 		}
 
         [TestMethod()]

@@ -3,6 +3,7 @@ using CouchPotato.Backend.ShowUtil;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -19,33 +20,6 @@ namespace CouchPotato.Backend.ApiUtil
             buildShows();
         }
 
-        public Image getCoverForShow(int id)
-        {
-            foreach (Show s in shows)
-            {
-                if (s.Id == id)
-                {
-                    string url = s.CoverPath;
-                    try
-                    {
-                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
-
-                        using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
-                        {
-                            var coverStream = response.GetResponseStream();
-                            return new Bitmap(coverStream);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Cant get the Cover.");
-                    }
-                }
-            }
-
-            return null;
-        }
-
         public Genre[] getGenres()
         {
             return genres;
@@ -53,7 +27,7 @@ namespace CouchPotato.Backend.ApiUtil
 
         public Show[] getShows()
         {
-            return shows;
+            return shows.ToArray<Show>();
         }
 
         public Show[] getShows(Genre genre)
@@ -69,12 +43,11 @@ namespace CouchPotato.Backend.ApiUtil
             return filteredShows.ToArray();
         }
 
-        public Show[] getShows(ISet<Genre> genres)
+        public Show[] getFilteredShows(ISet<Genre> genres, IEnumerable<Show> shows)
         {
             List<Show> filteredShows = new List<Show>();
             foreach (var show in shows)
             {
-                if (show == null) break;
                 foreach (var genre in genres)
                 {
                     if (show.Genres.Contains(genre))
@@ -87,21 +60,24 @@ namespace CouchPotato.Backend.ApiUtil
             return filteredShows.ToArray();
         }
 
-        public Show[] getShows(int page)
+        public Show[] getFilteredShows(ISet<Genre> genres)
         {
-            int max = (page + 1) * ApiConstants.PAGE_SIZE > shows.Length ? shows.Length - (ApiConstants.PAGE_SIZE * page) : ApiConstants.PAGE_SIZE;
-            Show[] resultArray = new Show[max];
-            for (int i = 0; i < max; i++)
-            {
-                int number = page * ApiConstants.PAGE_SIZE + i;
-                resultArray[i] = shows[number];
-            }
-            return resultArray;
+            return getFilteredShows(genres, shows);
+        }
+
+        public Show[] loadFilteredPage(int page, ISet<Genre> genres)
+        {
+            return getFilteredShows(genres);
         }
 
         protected override Task<HttpResponseMessage> get(string header)
         {
             return null;
+        }
+
+        public Image getCoverForShow(int id)
+        {
+            return base.getCoverForShow(id);
         }
 
         private void buildGenres()

@@ -16,12 +16,12 @@ namespace CouchPotato.Backend.LobbyUtil
         private long id;
         private User host;
         private ISet<User> users = new HashSet<User>();
-        private ISet<Show> selectedShows = new HashSet<Show>();
-        private ISet<Genre> selectedGenres = new HashSet<Genre>();
+        private IDictionary<int, (Show, int)> selectedShows = new Dictionary<int, (Show, int)>();
+        private IDictionary<string, (Genre, int)> selectedGenres = new Dictionary<string, (Genre, int)>();
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
-        private int sSwipes, gSwipes;
+        private int sSwipes, gSwipes, page;
 
         public Lobby(User host, long id)
         {
@@ -38,9 +38,15 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (User u in users)
             {
-                if (u.ID == id) return u;
+                if (u.ID == id)
+                {
+                    return u;
+                }
             }
-            if (host.ID == id) return host;
+            if (host.ID == id)
+            {
+                return host;
+            }
             return null;
         }
 
@@ -91,9 +97,9 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public Image getCoverForShow(int id)
         {
-            foreach (Show show in selectedShows)
+            if (selectedShows.ContainsKey(id))
             {
-                if (show.Id == id) return providerApi.getCoverForShow(id);
+                return providerApi.getCoverForShow(id);
             }
             return null;
         }
@@ -103,23 +109,22 @@ namespace CouchPotato.Backend.LobbyUtil
             if (mode == Mode.JOIN)
             {
                 mode = Mode.GENRE_SELECTION;
-                selectedGenres = new HashSet<Genre>(providerApi.getGenres());
+                AddNewGenres(providerApi.getGenres());
                 setUserSwipes(gSwipes);
                 setUserUnready();
             }
             else if (mode == Mode.GENRE_SELECTION)
             {
                 mode = Mode.FILM_SELECTION;
-                selectedGenres = evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
-                
+                evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
+
                 loadPage(0);
-                selectedShows = new HashSet<Show>(providerApi.getShows(selectedGenres));
                 setUserSwipes(sSwipes);
                 setUserUnready();
             }
             else if (mode == Mode.FILM_SELECTION)
             {
-                selectedShows = evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
+                evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
                 mode = Mode.OVER;
             }
             return mode;
@@ -150,53 +155,61 @@ namespace CouchPotato.Backend.LobbyUtil
 
         public Genre[] Genres
         {
-            get { return selectedGenres.ToArray<Genre>(); }
+            get { return getGenresFromDictionary().ToArray(); }
         }
 
-        private string[] getNames(ISet<Votable> set)
+        private ISet<Genre> getGenresFromDictionary()
         {
-            string[] names = new string[set.Count];
-            int i = 0;
-            foreach (Votable v in set)
+            ISet<Genre> genres = new HashSet<Genre>();
+            var tuple = selectedGenres.Values;
+            foreach (var kvPair in tuple)
             {
-                names[i] = v.Name;
-                i++;
+                genres.Add(kvPair.Item1);
             }
-            return names;
+            return genres;
         }
 
         public Show[] Shows
         {
-            get 
-            {
-                return selectedShows.ToArray<Show>(); 
-            }
+            get { return getShowsFromDictionary().ToArray(); }
         }
 
-
+        private ISet<Show> getShowsFromDictionary()
+        {
+            ISet<Show> shows = new HashSet<Show>();
+            var tuple = selectedShows.Values;
+            foreach (var kvPair in tuple)
+            {
+                shows.Add(kvPair.Item1);
+            }
+            return shows;
+        }
 
         public string ApiName 
         { 
-            get
-            {
-                return providerApi.GetType().Name;
-            }
+            get { return providerApi.GetType().Name; }
         }
 
         public bool loadPage(int page)
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                var showsOnPage = providerApi.getShows(page);
-                if (showsOnPage == null || showsOnPage.Length == 0)
+                try
+                {
+                    var genres = getGenresFromDictionary();
+                    var newShows = providerApi.loadFilteredPage(page, genres);
+                    if (newShows.Length == 0)
+                    {
+                        this.page++;
+                        return loadPage(this.page);
+                    }
+                    AddNewShows(newShows);
+                    return true;
+                }
+                catch (Exception e)
                 {
                     return false;
                 }
-                foreach (Show s in showsOnPage)
-                {
-                    selectedShows.Add(s);
-                }
-                return true;
             }
             return false;
         }
@@ -206,30 +219,25 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (number >= selectedShows.Count)
             {
-                int page = number / ApiConstants.PAGE_SIZE;
+                page++;
                 if (!loadPage(page))
                 {
                     throw new System.ArgumentOutOfRangeException();
                 }
             }
-            return selectedShows.ElementAt(number);
+            return selectedShows.ElementAt(number).Value.Item1;
         }
 
 
-        public void swipeGenre(long userId, string genre)
+        public void swipeGenre(long userId, string genreName)
         {
             if (mode == Mode.GENRE_SELECTION)
             {
-                foreach (Genre g in selectedGenres)
+                if (selectedGenres.ContainsKey(genreName))
                 {
-                    if (g.Name == genre)
-                    {
-                        if (getUser(userId).swipe())
-                        {
-                            g.Vote();
-                            break;
-                        }
-                    }
+                    var genre = selectedGenres[genreName];
+                    genre.Item2++;
+                    selectedGenres[genreName] = genre;
                 }
                 if (allUsersReady())
                 {
@@ -242,16 +250,11 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             if (mode == Mode.FILM_SELECTION)
             {
-                foreach (Show s in selectedShows)
+                if (selectedShows.ContainsKey(showId))
                 {
-                    if (s.Id == showId)
-                    {
-                        if (getUser(userId).swipe())
-                        {
-                            s.Vote();
-                            break;
-                        }
-                    }
+                    var show = selectedShows[showId];      
+                    show.Item2++;
+                    selectedShows[showId] = show;
                 }
                 if (allUsersReady())
                 {
@@ -272,14 +275,40 @@ namespace CouchPotato.Backend.LobbyUtil
             return true;
         }
 
-        public ISet<Genre> getGenreResults()
+        public void AddNewGenres(ICollection<Genre> keys)
         {
-            return evaluation.evaluateGenre(selectedGenres, EvaluationType.HIGHEST);
+            foreach (var key in keys)
+            {
+                selectedGenres.Add(key.Name, (key, 0));
+            }
         }
 
-        public ISet<Show> getShowResults()
+        public void AddNewShows(ICollection<Show> keys)
         {
-            return evaluation.evaluateShow(selectedShows, EvaluationType.HIGHEST);
+            foreach (var key in keys)
+            {
+                selectedShows.Add(key.Id, (key, 0));
+            }
+        }
+
+        public IDictionary<Genre, int> getGenreResults()
+        {
+            IDictionary<Genre, int> result = new Dictionary<Genre, int>();
+            foreach (var kvPair in selectedGenres.Values)
+            {
+                result.Add(kvPair.Item1, kvPair.Item2);
+            }
+            return result;
+        }
+
+        public IDictionary<Show, int> getShowResults()
+        {
+            IDictionary<Show, int> result = new Dictionary<Show, int>();
+            foreach (var kvPair in selectedShows.Values)
+            {
+                result.Add(kvPair.Item1, kvPair.Item2);
+            }
+            return result;
         }
     }
 }

@@ -4,6 +4,21 @@
     <div class="container d-flex justify-content-center align-middle">
         <div id="cardContainer"></div>
 
+        <div id="selectedGenreCard">
+            <div class="card ml-3" style="width: 12rem;">
+                <div class="card-header">
+                    Selected Genres
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var x in Model.selectedGenre)
+                    {
+                        <li class="list-group-item">@x.Name</li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+
         <div id="spinner">
             <span class="spinner-border" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
             Waiting for other users
@@ -54,6 +69,7 @@
         function end() {
             $.post("/Main/setUserReady", { "lobbyid": lobbyid, "userid": userid });
             $("#cardContainer").hide();
+            $("#selectedGenreCard").hide();
             $("#spinner").show();
             intervalId = setInterval(function () {
                 $.get("/Main/getMode", { lobbyid: lobbyid })

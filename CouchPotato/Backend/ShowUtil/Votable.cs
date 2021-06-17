@@ -15,17 +15,17 @@ namespace CouchPotato.Backend.ShowUtil
             set { name = value; }
         }
 
-        private int votes;
+        //private int votes;
 
-        public int Votes
-        {
-            get { return votes; }
-        }
+        //public int Votes
+        //{
+        //    get { return votes; }
+        //}
 
-        public void Vote()
-        {
-            votes++;
-        }
+        //public void Vote()
+        //{
+        //    votes++;
+        //}
 
         public Votable(string name)
         {
@@ -35,7 +35,7 @@ namespace CouchPotato.Backend.ShowUtil
         public bool Equals(Votable v)
         {
             if (v == null) return false;
-            return name.Equals(v.name) && votes == v.votes;
+            return name.Equals(v.name);
         }
     }
 }
