@@ -7,11 +7,11 @@ using System.Text;
 
 namespace CouchPotato.Backend.LobbyUtil.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class VotingEvaluationTests
     {
 
-        [TestMethod()]
+        [TestMethod]
         public void CompareHighestTest()
         {
             VotingEvaluation evaluation = new VotingEvaluation();
@@ -28,7 +28,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
             Assert.IsTrue(containtsSame(expectedHighest, evaluation.evaluateGenre(set, EvaluationType.HIGHEST)));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CompareVotedTest()
         {
             VotingEvaluation evaluation = new VotingEvaluation();
@@ -47,7 +47,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
             Assert.IsTrue(containtsSame(expectedVoted, evaluation.evaluateGenre(set, EvaluationType.VOTED)));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CompareAllTest()
         {
             VotingEvaluation evaluation = new VotingEvaluation();
@@ -74,13 +74,19 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 
         private bool containtsSame(IDictionary<string, (Genre, int)> expected, IDictionary<string, (Genre, int)> actual)
         {
-            if (expected.Count != actual.Count) return false;
+            if (expected.Count != actual.Count)
+            {
+                return false;
+            }
 
             var it = actual.GetEnumerator();
 
             foreach((Genre, int) genreTupel in expected.Values)
             {
-                if (genreTupel.Item1.Equals(it.Current)) return false;
+                if (genreTupel.Item1.Equals(it.Current))
+                {
+                    return false;
+                }
                 it.MoveNext();
             }
 

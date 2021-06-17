@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace CouchPotato.Backend.LobbyUtil.Tests
 {
-    [TestClass()]
+    [TestClass]
 	public class LobbyTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void getUserTest()
 		{
 			User hostUser = UserFactory.build("User");
@@ -27,7 +27,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			Assert.IsTrue(users.Contains(user3));
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void getUserTest1()
 		{
 			User user1 = UserFactory.build("User");
@@ -45,7 +45,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			Assert.IsNull(lobby1.getUser(invalidID));
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void LobbyRuntroughTest()
 		{
 			User host = UserFactory.build("User");
@@ -105,7 +105,7 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
 			}
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void SetConfigurationTest()
 		{
 			LobbyFactory.build(null).setConfiguration(Provider.Aniflix.getApi(), 5, 5);

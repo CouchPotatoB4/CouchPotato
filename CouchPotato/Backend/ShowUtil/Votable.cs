@@ -15,18 +15,6 @@ namespace CouchPotato.Backend.ShowUtil
             set { name = value; }
         }
 
-        //private int votes;
-
-        //public int Votes
-        //{
-        //    get { return votes; }
-        //}
-
-        //public void Vote()
-        //{
-        //    votes++;
-        //}
-
         public Votable(string name)
         {
             Name = name;

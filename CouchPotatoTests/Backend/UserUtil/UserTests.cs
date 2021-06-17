@@ -2,14 +2,14 @@
 
 namespace CouchPotato.Backend.UserUtil.Tests
 {
-	[TestClass()]
+	[TestClass]
 	public class UserTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void UserTest()
 		{
 			User user = UserFactory.build("User");
-			Assert.AreEqual(user.Name, "User");
+			Assert.AreEqual("User", user.Name);
 			Assert.IsFalse(user.swipe());
 			user.Swipes = 5;
 			int oldSwipeCount = user.Swipes;

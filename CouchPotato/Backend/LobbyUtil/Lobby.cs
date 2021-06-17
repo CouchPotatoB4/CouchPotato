@@ -16,8 +16,8 @@ namespace CouchPotato.Backend.LobbyUtil
         private long id;
         private User host;
         private ISet<User> users = new HashSet<User>();
-        private IDictionary<int, (Show, int)> selectedShows = new Dictionary<int, (Show, int)>();
-        private IDictionary<string, (Genre, int)> selectedGenres = new Dictionary<string, (Genre, int)>();
+        private readonly IDictionary<int, (Show, int)> selectedShows = new Dictionary<int, (Show, int)>();
+        private readonly IDictionary<string, (Genre, int)> selectedGenres = new Dictionary<string, (Genre, int)>();
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;

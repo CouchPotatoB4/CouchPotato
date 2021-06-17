@@ -8,7 +8,7 @@ using CouchPotato.Backend.ShowUtil;
 
 namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
 {
-	[TestClass()]
+	[TestClass]
 	public class AniflixApiTests
 	{
         private class PseudoAniflixApi : AniflixApi
@@ -33,7 +33,7 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ApiConnectionTest()
         {
             PseudoAniflixApi emptyApi = new PseudoAniflixApi(false);

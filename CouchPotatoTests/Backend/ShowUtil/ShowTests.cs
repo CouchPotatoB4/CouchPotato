@@ -3,10 +3,10 @@ using System;
 
 namespace CouchPotato.Backend.ShowUtil.Tests
 {
-	[TestClass()]
+	[TestClass]
 	public class ShowTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void ShowTest()
 		{
 			Show showFromConstructor = new Show(1, "TestShow", "TestDescription", "TestPath");
@@ -23,7 +23,7 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void DuplicateIdTest()
 		{
 			Show show1 = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");
