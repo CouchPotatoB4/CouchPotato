@@ -17,7 +17,7 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 			Assert.AreEqual(showFromConstructor.Description, showFromFactory.Description);
 			Assert.AreEqual(showFromConstructor.CoverPath, showFromFactory.CoverPath);
 
-            Genre genre = VotableFactory.buildGenre("TestGenre");
+            Genre genre = VotableFactory.buildGenre(1, "TestGenre");
             showFromFactory.AddGenre(genre);
 			Assert.IsTrue(showFromFactory.Genres.Contains(genre));
 

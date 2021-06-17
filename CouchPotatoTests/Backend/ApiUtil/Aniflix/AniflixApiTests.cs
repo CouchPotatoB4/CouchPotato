@@ -13,13 +13,18 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
 	{
         private class PseudoAniflixApi : AniflixApi
         {
-			internal PseudoAniflixApi(Boolean fillWithPseudoData) : base()
+			internal PseudoAniflixApi(bool fillWithPseudoData) : base()
             {
+                if(fillWithPseudoData)
+                {
+                    return;
+                }
+
                 Genre[] testGenres = new Genre[10];
 				Show[] testShows = new Show[10];
                 for (int i = 0; i < 10; i++)
                 {
-                    testGenres[i] = VotableFactory.buildGenre("Genre");
+                    testGenres[i] = VotableFactory.buildGenre(1, "Genre");
                     testShows[i] = VotableFactory.buildShow(1, "Show", "Description", "Path");
                 }
 

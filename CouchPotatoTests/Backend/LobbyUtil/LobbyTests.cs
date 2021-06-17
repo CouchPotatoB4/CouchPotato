@@ -61,14 +61,14 @@ namespace CouchPotato.Backend.LobbyUtil.Tests
                 var genre = lobby.Genres[i];
                 int currentSwipeCount = lobby.getSwipesForGenre(genre);
 				Assert.AreEqual(0, currentSwipeCount);
-				lobby.swipeGenre(host.ID, genre.Name);
+				lobby.swipeGenre(host.ID, genre.Id);
 				Assert.AreNotEqual(currentSwipeCount, lobby.getSwipesForGenre(genre)); // Vote count should be updated & not equal to old count
 				votedGenres.Add(genre);
 			}
 
             Genre invalidVotedGenre = lobby.Genres[9];
             int genreVoteCount = lobby.getSwipesForGenre(invalidVotedGenre);
-			lobby.swipeGenre(host.ID, invalidVotedGenre.Name);
+			lobby.swipeGenre(host.ID, invalidVotedGenre.Id);
             Assert.AreEqual(genreVoteCount, lobby.getSwipesForGenre(invalidVotedGenre)); // Vote count should not modify with swiping after reaching max swipe count 
 
 			int oldSelectedGenreCount = lobby.Genres.Length;
