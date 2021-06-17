@@ -3,10 +3,10 @@ using System;
 
 namespace CouchPotato.Backend.ShowUtil.Tests
 {
-	[TestClass()]
+	[TestClass]
 	public class ShowTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void ShowTest()
 		{
 			Show showFromConstructor = new Show(1, "TestShow", "TestDescription", "TestPath");
@@ -17,17 +17,13 @@ namespace CouchPotato.Backend.ShowUtil.Tests
 			Assert.AreEqual(showFromConstructor.Description, showFromFactory.Description);
 			Assert.AreEqual(showFromConstructor.CoverPath, showFromFactory.CoverPath);
 
-			int oldVotesCount = showFromConstructor.Votes;
-			showFromConstructor.Vote();
-			Assert.AreNotEqual(oldVotesCount, showFromConstructor.Votes);
-
             Genre genre = VotableFactory.buildGenre("TestGenre");
             showFromFactory.AddGenre(genre);
 			Assert.IsTrue(showFromFactory.Genres.Contains(genre));
 
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void DuplicateIdTest()
 		{
 			Show show1 = VotableFactory.buildShow(1, "TestShow", "TestDescription", "TestPath");

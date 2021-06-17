@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Net;
 
 namespace CouchPotato.Backend.ApiUtil
 {
@@ -46,6 +47,50 @@ namespace CouchPotato.Backend.ApiUtil
         {
             var content = get(header).Result.Content;
             return content.ReadAsStringAsync().Result;
+        }
+
+        protected Image getCoverForShow(int id)
+        {
+            return getCoverForShow(id, "");
+        }
+
+        protected Image getCoverForShow(int id, string query)
+        {
+            return getCoverForShow(id, query, null);
+        }
+
+        protected Image getCoverForShow(int id, string query, IList<(HttpRequestHeader, string)> headers)
+        {
+            foreach (Show s in shows)
+            {
+                if (s.Id == id)
+                {
+                    string url = query + s.CoverPath;
+                    try
+                    {
+                        HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+                        if (headers != null)
+                        {
+                            foreach (var header in headers)
+                            {
+                                webRequest.Headers.Add(header.Item1, header.Item2);
+                            }
+                        }
+
+                        using (HttpWebResponse response = (HttpWebResponse)webRequest.GetResponseAsync().Result)
+                        {
+                            var coverStream = response.GetResponseStream();
+                            return new Bitmap(coverStream);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Can't load Image.");
+                    }
+                }
+            }
+
+            return null;
         }
     }   
 }

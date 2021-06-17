@@ -6,10 +6,10 @@ using System.Text;
 
 namespace CouchPotatoTests.Backend.ApiUtil.Aniflix
 {
-    [TestClass()]
+    [TestClass]
     public class JsonsTest
     {
-        [TestMethod()]
+        [TestMethod]
         public void ShowJsonTest()
         {
             ShowJson showJson = new ShowJson();
@@ -46,12 +46,6 @@ namespace CouchPotatoTests.Backend.ApiUtil.Aniflix
             Assert.AreEqual(2, showJson.howManyAbos);
             Assert.AreEqual(3, showJson.seasonCount);
             Assert.AreEqual("Great", showJson.rating);
-        }
-
-        [TestMethod()]
-        public void GenreWithShowsTest()
-        {
-            
         }
     }
 }

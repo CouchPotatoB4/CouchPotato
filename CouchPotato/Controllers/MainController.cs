@@ -44,8 +44,10 @@ namespace CouchPotato.Controllers
         {
             Lobby lobby = Control.getLobby(lobbyid);
             EndscreenViewModel model = new EndscreenViewModel();
-            model.shows = lobby.Shows;
+            var result = lobby.getShowResults();
+            model.shows = result.Keys.ToArray();
             model.anzUser = lobby.getAllUsers().Count();
+            model.votes = result.ElementAt(0).Value;
             return View(model);
         }
 

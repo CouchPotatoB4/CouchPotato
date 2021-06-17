@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CouchPotato.Controllers.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class HomeControllerTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void HomeControllerTest()
         {
             HomeController controller = new HomeController(null);
