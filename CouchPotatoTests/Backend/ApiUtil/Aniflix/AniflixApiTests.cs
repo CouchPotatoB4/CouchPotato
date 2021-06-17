@@ -34,16 +34,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
         }
 
         [TestMethod()]
-		public void GeneralApiTest()
-		{
-            PseudoAniflixApi filledApi = new PseudoAniflixApi(true);
-            Genre[] genres = filledApi.getGenres();
-            Assert.IsNotNull(genres);
-            Assert.IsNotNull(filledApi.getShows());
-            Assert.IsNotNull(filledApi.loadPage(0));
-		}
-
-        [TestMethod()]
         public void ApiConnectionTest()
         {
             PseudoAniflixApi emptyApi = new PseudoAniflixApi(false);
@@ -61,7 +51,6 @@ namespace CouchPotato.Backend.ApiUtil.Aniflix.Tests
             catch(Exceptions.DeniedConnectionException e)
             {
                 Assert.Fail("No Connection to API - Request Answer: " + e.Message);
-                return;
             }
         }
 	}
