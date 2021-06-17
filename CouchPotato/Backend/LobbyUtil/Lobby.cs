@@ -21,7 +21,7 @@ namespace CouchPotato.Backend.LobbyUtil
         private VotingEvaluation evaluation = new VotingEvaluation();
         private IApi providerApi;
         private Mode mode;
-        private int sSwipes, gSwipes, page = 0;
+        private int sSwipes, gSwipes, page;
 
         public Lobby(User host, long id)
         {
@@ -38,9 +38,15 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (User u in users)
             {
-                if (u.ID == id) return u;
+                if (u.ID == id)
+                {
+                    return u;
+                }
             }
-            if (host.ID == id) return host;
+            if (host.ID == id)
+            {
+                return host;
+            }
             return null;
         }
 
@@ -93,7 +99,10 @@ namespace CouchPotato.Backend.LobbyUtil
         {
             foreach (Show show in selectedShows)
             {
-                if (show.Id == id) return providerApi.getCoverForShow(id);
+                if (show.Id == id)
+                {
+                    return providerApi.getCoverForShow(id);
+                }
             }
             return null;
         }
