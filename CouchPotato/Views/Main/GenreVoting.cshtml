@@ -38,21 +38,21 @@
 
         @foreach (var d in Model.genres)
         {
-            @:genreArray.push("@d.Name");
+            @:genreArray.push({name:"@d.Name",id:@d.Id});
         }
 
         var intervalId;
 
         $(document).ready(function () {
             $("#spinner").hide();
-            $("#cardTitle").html(genreArray[currentGenre]);
-            
+            $("#cardTitle").html(genreArray[currentGenre].name);
+
         });
 
         function upvote() {
             if (swipes > 0) {
                 swipes--;
-                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genre: genreArray[currentGenre] });
+                $.post("/Main/swipeGenre", { userid: userid, lobbyid: lobbyid, genreid: genreArray[currentGenre].id });
             }
             if (swipes > 0) {
                 next();
@@ -69,7 +69,7 @@
             }
             else
             {
-                $("#cardTitle").html(genreArray[currentGenre]);
+                $("#cardTitle").html(genreArray[currentGenre].name);
             }
         }
 

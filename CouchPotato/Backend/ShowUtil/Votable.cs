@@ -15,15 +15,24 @@ namespace CouchPotato.Backend.ShowUtil
             set { name = value; }
         }
 
-        public Votable(string name)
+        private int id;
+
+        public int Id
         {
+            get { return id; }
+            set { id = value; }
+        }
+
+        public Votable(int id, string name)
+        {
+            Id = id;
             Name = name;
         }
 
         public bool Equals(Votable v)
         {
             if (v == null) return false;
-            return name.Equals(v.name);
+            return id == v.Id;
         }
     }
 }

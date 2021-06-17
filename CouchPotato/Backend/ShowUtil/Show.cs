@@ -8,14 +8,6 @@ namespace CouchPotato.Backend.ShowUtil
 {
     public partial class Show : Votable
     {
-        private int id;
-
-        public int Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
-
         private string description;
 
         public string Description
@@ -45,17 +37,10 @@ namespace CouchPotato.Backend.ShowUtil
         }
 
 
-        public Show(int id, string name, string description, string coverStorage) : base(name)
+        public Show(int id, string name, string description, string coverStorage) : base(id, name)
         {
-            Id = id;
             Description = description;
             CoverPath = coverStorage;
-        }
-
-
-        public bool Equals(Show s)
-        {
-            return id == s.id;
         }
     }
 }
