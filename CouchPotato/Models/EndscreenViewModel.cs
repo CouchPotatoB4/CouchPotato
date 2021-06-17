@@ -7,5 +7,6 @@ namespace CouchPotato.Models
     {
         public Show[] shows { get; set; }
         public int anzUser { get; set; }
+        public int votes { get; set; }
     }
 }
